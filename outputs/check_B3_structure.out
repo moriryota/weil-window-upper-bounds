@@ -1,0 +1,7 @@
+rule residual (truncated series, should be 0): 0
+G''  : {(0, 1): -1, (2, 2): 1}
+G'''': {(0, 2): 3, (2, 3): -6, (4, 4): 1}
+phihat terms (i,l): [(0, 1), (0, 2), (2, 2), (2, 3), (4, 4)]  max i = 4  all i<=l: True
+xi phihat' terms  : [(2, 2), (2, 3), (4, 3), (4, 4), (6, 5)]  max i = 6  all i<=l+1: True
+phihat: lambda power = 5 + 2*(5/2 + 4) = 18
+xi phihat': lambda power = 5 + 2*(5/2 + 6) = 22

@@ -1,4 +1,4 @@
-% Ryota Mori. Version 1, 2026. Licence: CC BY 4.0.
+% Ryota Mori. Version 2, 2026. Licence: CC BY 4.0.
 \documentclass[11pt]{amsart}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
@@ -17,6 +17,8 @@
 \theoremstyle{remark}
 \newtheorem{remark}[proposition]{Remark}
 
+\numberwithin{equation}{section}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\N}{\mathbb{N}}
@@ -25,7 +27,6 @@
 \newcommand{\lean}[1]{\nolinkurl{#1}}
 \makeatletter\g@addto@macro{\UrlBreaks}{\do\_\do\.}\makeatother
 \emergencystretch=3em
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 \title[Upper bounds for windowed Weil forms]{Unconditional doubly exponential upper bounds for the bottom of windowed Weil quadratic forms}
 
@@ -38,7 +39,7 @@
 \begin{document}
 
 \begin{abstract}
-For $\lambda>1$ let $\lambda_{\min}(\lambda)$ be the bottom of the spectrum of Weil's quadratic form restricted to test functions supported in the multiplicative window $[\lambda^{-1},\lambda]$. The Riemann Hypothesis is equivalent to $\lambda_{\min}(\lambda)\ge0$ for all $\lambda$. We prove two \emph{upper} bounds that hold without any hypothesis on the zeros of $\zeta$. Theorem~A gives $\lambda_{\min}(\lambda)\le C\lambda^{p}e^{-2\pi\lambda^{2}}$, with all constants explicit; for every $\lambda\ge\sqrt5$ one may take $\lambda_{\min}(\lambda)\le1.563\times10^{9}\,\lambda^{16}e^{-2\pi\lambda^{2}}$. Theorem~B improves the exponent to $e^{-4\pi\lambda^{2}}$ by means of Kaiser--Bessel windows. Both proofs rest on one observation: the image of the summation map $\varphi\mapsto\sum_{n}\varphi(nu)$ lies in the radical of the Weil form, and cutting such a function off to the window costs only a Gaussian tail. The exponent $4\pi$ agrees with the prolate spheroidal heuristics of Connes--Consani--Moscovici and with high-precision computations of $\lambda_{\min}$. We also observe that the prolate quantity $1-\chi_2(\lambda)\asymp\mu^{9/2}e^{-4\pi\mu}$ reproduces the certified numerical upper bounds of Zhu to within a factor of $20$, over $283$ orders of magnitude. This numerical observation suggests that the true decay rate has exponent $4\pi$. Theorem~A is formalized in Lean~4, on top of a formalization of Weil's explicit formula; the formal statement depends only on the standard axioms. These results concern upper bounds only. They say nothing about positivity and do not address the Riemann Hypothesis.
+For $\lambda>1$ let $\lambda_{\min}(\lambda)$ be the bottom of the spectrum of Weil's quadratic form restricted to test functions supported in the multiplicative window $[\lambda^{-1},\lambda]$. By Weil's criterion, the Riemann Hypothesis is equivalent to $\lambda_{\min}(\lambda)\ge0$ for all $\lambda$. We prove two \emph{upper} bounds that hold without any hypothesis on the zeros of $\zeta$. Theorem~A gives $\lambda_{\min}(\lambda)\le C\lambda^{p}e^{-2\pi\lambda^{2}}$, with all constants explicit; for every $\lambda\ge\sqrt5$ one may take $\lambda_{\min}(\lambda)\le1.563\times10^{9}\,\lambda^{16}e^{-2\pi\lambda^{2}}$. Theorem~B improves the exponent to $e^{-4\pi\lambda^{2}}$ by means of Kaiser--Bessel windows. Both proofs rest on one observation: the image of the summation map $\varphi\mapsto\sum_{n}\varphi(nu)$ lies in the radical of the Weil form, and cutting such a function off to the window costs only a Gaussian tail. The exponent $4\pi$ is the exponent of the prolate eigenvalue defect $1-\chi_2(\lambda)$, which Connes, Consani and Moscovici observed to track $\lambda_{\min}$ numerically. We extend this comparison to the certified numerical upper bounds of Zhu: divided by $1-\chi_2$, they stay between $3$ and $20$ over $283$ orders of magnitude. Theorem~A is formalized in Lean~4, on top of a formalization of Weil's explicit formula; the formal statement depends only on the standard axioms. These results concern upper bounds only. They say nothing about positivity and do not address the Riemann Hypothesis.
 \end{abstract}
 
 \maketitle
@@ -48,7 +49,7 @@ For $\lambda>1$ let $\lambda_{\min}(\lambda)$ be the bottom of the spectrum of W
 \textbf{Status.}
 \begin{itemize}
 \item \textbf{Theorem~A.} Proved in this paper, with explicit constants established by ball arithmetic. In its form with existential constants it is formalized in Lean~4 (declaration \lean{RhWeil.Concrete.theoremA}). That formalization depends only on \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}, and its statement was audited against the standard form of the explicit formula.
-\item \textbf{Theorem~B.} Proved in this paper; not formalized. The threshold $\lambda_0$ is not effective.
+\item \textbf{Theorem~B.} Proved in this paper; not formalized. The constants $C$ and $p$ are explicit; the threshold $\lambda_0$ is not effective.
 \end{itemize}
 This paper has not yet been reviewed by independent human experts.}}
 \end{center}
@@ -60,7 +61,7 @@ Weil's criterion states that the Riemann Hypothesis (RH) holds if and only if a 
 \begin{itemize}
 \item $\lambda_{\min}$ is nonincreasing in $\lambda$;
 \item RH is equivalent to $\lambda_{\min}(\lambda)\ge0$ for all $\lambda$;
-\item numerically $\lambda_{\min}(\lambda)$ is positive but tiny, and the corresponding ground state is close to a prolate spheroidal wave function~\cite{CC21,CCM25}.
+\item numerically $\lambda_{\min}(\lambda)$ is positive but tiny, and the corresponding ground state is close to a vector built from prolate spheroidal wave functions~\cite{CC21,CCM25}.
 \end{itemize}
 Proving positivity window by window therefore requires control of a margin that shrinks very fast with $\lambda$. This paper quantifies that shrinking from above, unconditionally.
 
@@ -74,9 +75,9 @@ There are effectively computable constants $C,p,\lambda_0$ such that for all $\l
 \]
 More precisely, for $\mu\ge5$ we have $\lambda_{\min}(\lambda)\le 2S\,B(\lambda)^2/c_0^2$. Here:
 \begin{itemize}
-\item $B(\lambda)$ is an explicit elementary function with $B(\lambda)e^{\pi\mu}=O(\mu^{4})$;
-\item $S=\sum_\rho m_\rho(1+|\gamma_\rho|^2)^{-1}<0.0462$;
-\item $c_0^2=0.00894$.
+\item $B(\lambda)$ is the explicit elementary function \eqref{eq:Bdef}, and $B(\lambda)e^{\pi\mu}=O(\mu^{4})$;
+\item $S=\sum_\rho m_\rho(1+|\gamma_\rho|^2)^{-1}<0.046192$;
+\item $c_0^2=0.00894$ is a lower bound for $\|k\|^2$ (Lemma~\ref{lem:A3}).
 \end{itemize}
 In closed form, for every $\mu\ge5$, $\lambda_{\min}(\lambda)\le1.563\times10^{9}\mu^{8}e^{-2\pi\mu}$.
 \end{theorem}
@@ -86,31 +87,33 @@ There are constants $C,p,\lambda_0$ such that for all $\lambda\ge\lambda_0$
 \[
 \lambda_{\min}(\lambda)\;\le\;C\,\lambda^{p}\,e^{-4\pi\lambda^{2}} .
 \]
+One may take $p=46$, and $C$ can be made explicit; $\lambda_0$ is not effective.
 \end{theorem}
 
-Both statements are unconditional: no hypothesis on the location of the zeros of $\zeta$ is used. In terms of the half-width $a=\log\lambda$ of the window in logarithmic coordinates, $\mu=e^{2a}$, so the bounds decay doubly exponentially in $a$.
+Both statements are unconditional: no hypothesis on the location of the zeros of $\zeta$ is used. In terms of the half-width $a=\log\lambda$ of the window in logarithmic coordinates, $\mu=e^{2a}$, so the bounds decay doubly exponentially in $a$. The value $p=46$ is not optimized; see Remark~\ref{rem:poly}.
 
 \subsection{Relation to previous work}
 \begin{itemize}
+\item \textbf{The prolate heuristics.} Let $1-\chi_2(\lambda)$ be the prolate eigenvalue defect defined in Section~\ref{sec:numerics}; by a theorem of Fuchs~\cite{Fuchs64} it behaves like $\mu^{9/2}e^{-4\pi\mu}$. Connes, Consani and Moscovici~\cite[Fig.~4]{CCM25} and Connes~\cite[Fig.~1]{Connes26} observed that $\log\lambda_{\min}(\lambda)$ and $\log(1-\chi_2(\lambda))$ behave strikingly alike as functions of $\mu$; the figure in~\cite{CCM25} covers $2\le\mu\le17$. Theorem~\ref{thm:B} proves the upper-bound half of this picture at the level of the exponent: $\lambda_{\min}\le e^{-4\pi\mu+O(\log\mu)}$. Our own computations in Section~\ref{sec:numerics} repeat the comparison for $\mu\le20$; they are not new in substance.
 \item \textbf{Zhu's conditional bound.} Zhu~\cite{Zhu26} proves, \emph{assuming RH}, the bound $\lambda^*(L)\le\exp(-Le^{L})$ for windows $[-L,L]$ in logarithmic coordinates, so $L=a$ and $\exp(-Le^{L})=\exp(-\tfrac12\sqrt\mu\log\mu)$. Theorems~\ref{thm:A} and~\ref{thm:B} remove the hypothesis and replace $\sqrt\mu\log\mu$ by $2\pi\mu$ and $4\pi\mu$.
-\item \textbf{Zhu's certified numerics.} Zhu also gives certified \emph{numerical} upper bounds for $\lambda^*(L)$ with $0.5\le L\le2$, evaluated unconditionally on the geometric side, together with an empirical law $-\ln\lambda^*\simeq2\pi^2N(T^*)/\ln N(T^*)$. Section~\ref{sec:numerics} compares these numbers with the prolate quantity $1-\chi_2(\lambda)\asymp\mu^{9/2}e^{-4\pi\mu}$. The ratio stays between $3$ and $20$ for $0.5\le L\le2$, while the numbers themselves range over $283$ orders of magnitude. This suggests that $-\ln\lambda_{\min}=4\pi\mu+O(\log\mu)$, the rate of Theorem~\ref{thm:B}. Zhu's fitted law would instead behave like $2\pi^2\mu$ as $\mu\to\infty$. We stress that this is an observation about upper bounds only; the true asymptotics can be decided only with lower bounds, which are of the same strength as RH.
+\item \textbf{Zhu's certified numerics.} Zhu also gives certified \emph{numerical} upper bounds for $\lambda^*(L)$ with $0.5\le L\le2$, evaluated unconditionally on the geometric side, together with an empirical law $-\ln\lambda^*\simeq2\pi^2N(T^*)/\ln N(T^*)$. What is new in Section~\ref{sec:numerics} is the comparison of these numbers with $1-\chi_2$. The ratio stays between $3$ and $20$ for $0.5\le L\le2$ (that is, $2.7\le\mu\le54.6$), while the numbers themselves range over $283$ orders of magnitude. This extends the observation of~\cite{CCM25,Connes26} to $\mu\approx55$ and is consistent with $-\ln\lambda_{\min}=4\pi\mu+O(\log\mu)$. Zhu's fitted law would instead behave like $2\pi^2\mu$ as $\mu\to\infty$. This is an observation about upper bounds only; the true asymptotics can be decided only with lower bounds, which are of the same strength as RH.
 \item \textbf{Positivity on a fixed window.} In earlier work~\cite{Mori26} the author proved $W(f)>0$ on the window $[-\frac12\log5,\frac12\log5]$ with a Lean formalization. The present paper goes in the opposite direction: it bounds from above, unconditionally, the margin that any such window-by-window positivity proof can have.
 \item \textbf{The CCM program.} In~\cite{CCM25} two steps remain open in the program:
   \begin{enumerate}
   \item the ground state is simple and even;
   \item the ground state is close to the vector $k_\lambda$ built from prolate functions.
   \end{enumerate}
-  Our results concern neither step directly. The test functions of Theorem~\ref{thm:B}, however, are closely related to $k_\lambda$.
+  Our results concern neither step directly. Zhu~\cite[Thm.~6.2]{Zhu26} certifies step~1 for the single window $L=0.8$.
 \end{itemize}
 
 \subsection{Idea of the proof}
-Let $\E(\varphi)(u)=u^{1/2}\sum_{n\ge1}\varphi(nu)$. If $\varphi$ is even and $\varphi(0)=\int\varphi=0$, then the Mellin transform of $\E(\varphi)$ equals $\zeta(\tfrac12+iz)$ times an entire function. Hence $\E(\varphi)$ lies in the radical of the Weil form: its Fourier transform vanishes at every zero ordinate $\gamma_\rho$, whether or not $\rho$ is on the critical line. This fact is classical~\cite{Connes99,CC21}.
+Let $\E(\varphi)(u)=u^{1/2}\sum_{n\ge1}\varphi(nu)$. If $\varphi$ is even and $\varphi(0)=\int\varphi=0$, then the Mellin transform of $\E(\varphi)$ equals $\zeta(\tfrac12+iz)$ times a holomorphic function. Hence $\E(\varphi)$ lies in the radical of the Weil form: its Fourier transform vanishes at every zero ordinate $\gamma_\rho$, whether or not $\rho$ is on the critical line. This fact is classical~\cite{Connes99,CC21}.
 
 Now suppose $\varphi$ is supported in $[-\lambda,\lambda]$. Then $\E(\varphi)$ vanishes for $u\ge\lambda$. Its restriction $k$ to the window differs from $\E(\varphi)$ only by the piece $r$ on $u<\lambda^{-1}$. By Poisson summation this piece is controlled by $\hat\varphi$ on $|\xi|\ge\lambda$. Since $\hat k=-\hat r$ at the zeros, the explicit formula gives
 \[
 |W(k)|\le2S\,\big(\text{size of }\hat\varphi\text{ beyond }\lambda\big)^2 .
 \]
-Theorem~\ref{thm:A} takes $\varphi$ to be Riemann's function $h$, whose Fourier transform is itself and decays like $e^{-\pi\xi^2}$, cut off smoothly. Theorem~\ref{thm:B} takes a Kaiser--Bessel window, whose Fourier transform beyond the band edge is smaller by $e^{-2\pi\lambda^2}$.
+Theorem~\ref{thm:A} takes $\varphi$ to be Riemann's function $h$, whose Fourier transform is itself and decays like $e^{-\pi\xi^2}$, cut off smoothly. Theorem~\ref{thm:B} takes a Kaiser--Bessel window, whose Fourier transform beyond the band edge is smaller by a further factor $e^{-2\pi\lambda^2}$. This is the familiar concentration property of time- and band-limited functions~\cite{SP61}.
 
 \subsection{Formalization}
 Theorem~\ref{thm:A} is formalized in Lean~4~\cite{Lean4,Mathlib} as a statement about the geometric side of the explicit formula (Section~\ref{sec:lean}). It builds on the formalization of Weil's explicit formula in the Lean library Zeta23~\cite{Zeta23}, which is released under the Apache License 2.0.
@@ -122,7 +125,7 @@ Let $\lambda>1$ and $a=\log\lambda$. In the variable $y=\log u$, the space $L^2(
 \hat f(z)=\int_\R f(y)e^{izy}\,dy\ \ (\text{logarithmic variable}),\qquad
 \hat\varphi(\xi)=\int_\R\varphi(x)e^{2\pi ix\xi}\,dx\ \ (\text{additive variable}).
 \]
-For a nontrivial zero $\rho$ of $\zeta$ with multiplicity $m_\rho$, put $\gamma_\rho=(\rho-\tfrac12)/i$. Then $|\operatorname{Im}\gamma_\rho|<\tfrac12$, and the multiset of the $\gamma_\rho$ is invariant under $\gamma\mapsto-\gamma$.
+For a nontrivial zero $\rho$ of $\zeta$ with multiplicity $m_\rho$, put $\gamma_\rho=(\rho-\tfrac12)/i$. Then $|\operatorname{Im}\gamma_\rho|<\tfrac12$, and the multiset of the $\gamma_\rho$ is invariant under $\gamma\mapsto-\gamma$ and $\gamma\mapsto\bar\gamma$.
 
 Weil's quadratic form $W(f)=QW(f,f)$ is given on the geometric side as in \cite[(3.19)]{CCM25}. Let $\lambda_{\min}(\lambda)$ be the bottom of the spectrum of its restriction to $L^2([-a,a])$ \cite[Thm.~3.6, Cor.~3.7]{CCM25}. Piecewise smooth functions supported in $[-a,a]$ belong to the form domain \cite[after (3.27)]{CCM25}. Hence
 \begin{equation}\label{eq:rayleigh}
@@ -135,52 +138,123 @@ Finally put $S=\sum_\rho m_\rho(1+|\gamma_\rho|^2)^{-1}$.
 \begin{definition}[Hypothesis (H)]
 A function $\varphi:\R\to\R$ satisfies (H) if:
 \begin{itemize}
-\item $\varphi$ is even, $C^1$, and piecewise $C^2$;
+\item $\varphi$ is even, $C^1$, and piecewise $C^2$ with finitely many break points;
 \item $\operatorname{supp}\varphi\subset[-\lambda,\lambda]$ and $\varphi(\pm\lambda)=0$;
-\item $\varphi(v)=O(v^2)$ at $0$ and $\int\varphi=0$;
-\item there are $\alpha,\alpha'>1$ with $|\hat\varphi(\xi)|\le C(1+|\xi|)^{-\alpha}$ and $|\xi\hat\varphi'(\xi)|\le C(1+|\xi|)^{-\alpha'}$.
+\item $\varphi(v)=O(v^2)$ as $v\to0$, and $\int\varphi=0$;
+\item there are $\alpha,\alpha'>1$ and $C_\varphi$ with $|\hat\varphi(\xi)|\le C_\varphi(1+|\xi|)^{-\alpha}$ and $|\xi\hat\varphi'(\xi)|\le C_\varphi(1+|\xi|)^{-\alpha'}$.
 \end{itemize}
 \end{definition}
 
-Given such $\varphi$, put $e(y)=e^{y/2}\sum_{n\ge1}\varphi(ne^y)$, $k=e\,\mathbf 1_{[-a,a]}$ and $r=e\,\mathbf 1_{(-\infty,-a)}$. Then $e=0$ on $[a,\infty)$, so $e=k+r$.
+Given such $\varphi$, put
+\[
+e(y)=e^{y/2}\sum_{n\ge1}\varphi(ne^y),\qquad k=e\,\mathbf 1_{[-a,a]},\qquad r=e\,\mathbf 1_{(-\infty,-a)} .
+\]
+Thus $e(\log u)=\E(\varphi)(u)$. Near any $y_0<a$ only finitely many $n$ contribute, so $e$ is $C^1$ on $(-\infty,a)$. For $y\ge a$ every term vanishes, because $ne^y\ge\lambda$. Since $\varphi(\lambda)=\varphi'(\lambda)=0$, $e$ is $C^1$ on $(-\infty,\infty)$ with $e=0$ on $[a,\infty)$, and $e=k+r$. In particular $k$ is piecewise $C^1$, with a single jump, at $-a$.
 
 \begin{lemma}[Explicit formula]\label{lem:EF}
-For real, compactly supported, piecewise $C^1$ functions $f$ with finitely many jumps, $W(f)=\sum_\rho m_\rho\hat f(\gamma_\rho)\hat f(-\gamma_\rho)$, and the sum converges absolutely.
+Let $f$ be real, compactly supported and piecewise $C^1$ with finitely many jumps. Then
+\[
+W(f)=\sum_\rho m_\rho\hat f(\gamma_\rho)\hat f(-\gamma_\rho),
+\]
+and the sum converges absolutely.
 \end{lemma}
 \begin{proof}
-For $f\in C_c^\infty$ this is Weil's explicit formula applied to $f*f^*$ \cite{Weil52,Bombieri00}. In general, $f'$ is a finite measure, so $|\hat f(z)|\le C_f/(1+|z|)$ on $|\operatorname{Im}z|\le\frac12$. Mollify $f$. The zero side converges by dominated convergence, since $\sum m_\rho(1+|\gamma_\rho|^2)^{-1}<\infty$. The geometric side converges by dominated convergence (archimedean term), pointwise convergence (poles), and finiteness (primes).
+For $f\in C_c^\infty$ this is Weil's explicit formula for $g=f*f^*$, where $f^*(y)=f(-y)$ and $\hat g(z)=\hat f(z)\hat f(-z)$~\cite{Weil52,Bombieri00}. It is unconditional.
+
+In general the distributional derivative $f'$ is a finite measure, so integration by parts gives $|\hat f(z)|\le C_f/(1+|z|)$ on the strip $|\operatorname{Im}z|\le\frac12$. Let $f_n=f*\varrho_{1/n}$ with an even mollifier $\varrho_{1/n}\ge0$ supported in $[-\frac1n,\frac1n]$. Then $|\hat\varrho_{1/n}|\le e^{1/(2n)}$ on the strip, so the bound $|\hat f_n(z)|\le e^{1/2}C_f/(1+|z|)$ holds with one constant, and $\hat f_n\to\hat f$ pointwise. On the zero side we use dominated convergence, since $\sum_\rho m_\rho(1+|\gamma_\rho|^2)^{-1}<\infty$. On the geometric side \cite[(3.19)]{CCM25}:
+\begin{itemize}
+\item the archimedean term $\int|\hat f_n(t)|^2\partial_t\theta(t)\,dt/\pi$ converges by dominated convergence, since $\partial_t\theta(t)=O(\log(2+|t|))$ \cite[(3.24)]{CCM25} and $|\hat f_n(t)|\le|\hat f(t)|=O(1/(1+|t|))$ on $\R$;
+\item the pole terms $\hat f_n(\pm\frac i2)\hat f_n(\mp\frac i2)$ converge;
+\item the prime sum is a finite sum of values of $f_n*f_n^*$, which converge uniformly.
+\end{itemize}
+Passing to the limit on both sides gives the claim.
 \end{proof}
 
 \begin{lemma}[Poisson summation]\label{lem:poisson}
-Under (H), $e(y)=e^{-y/2}\sum_{m\ge1}\hat\varphi(me^{-y})$ for all $y$. Hence $e(y)=O(e^{(\alpha-\frac12)y})$ and $e'(y)=O(e^{\min(\alpha,\alpha')y-\frac12 y})$ as $y\to-\infty$.
-\end{lemma}
-
-\begin{lemma}[Radical]\label{lem:radical}
-Under (H), $\hat e(\pm\gamma_\rho)=0$ for every nontrivial zero $\rho$.
+Assume (H). For every $y\in\R$,
+\begin{equation}\label{eq:poisson}
+e(y)=e^{-y/2}\sum_{m\ge1}\hat\varphi(me^{-y}),
+\end{equation}
+and for $y\le0$,
+\[
+|e(y)|\le C_\varphi\zeta(\alpha)e^{(\alpha-\frac12)y},\qquad |e'(y)|\le\tfrac12|e(y)|+C_\varphi\zeta(\alpha')e^{(\alpha'-\frac12)y}.
+\]
 \end{lemma}
 \begin{proof}
-For $\operatorname{Im}z<-\frac12$, Fubini and the substitution $v=ne^y$ give $\hat e(z)=\zeta(\tfrac12+iz)\Phi(z)$ with $\Phi(z)=\int_0^\infty\varphi(v)v^{-\frac12+iz}dv$. The function $\Phi$ is holomorphic on $\operatorname{Im}z<\frac52$, and $\hat e$ is holomorphic on $\operatorname{Im}z<\alpha-\frac12$ by Lemma~\ref{lem:poisson}. Both sides therefore agree on the connected set $\{\operatorname{Im}z<\alpha-\frac12\}\setminus\{-\frac i2\}$, which contains every $\pm\gamma_\rho$. Finally $\zeta(\rho)=\zeta(1-\rho)=0$.
+Fix $x>0$. The function $u\mapsto\sum_{n\in\mathbb Z}\varphi((n+u)x)$ is continuous and $1$-periodic, and its Fourier coefficients are $x^{-1}\hat\varphi(m/x)$ up to sign of the index. They are absolutely summable because $\alpha>1$. Hence the Fourier series converges to the function everywhere, and at $u=0$
+\[
+\sum_{n\in\mathbb Z}\varphi(nx)=x^{-1}\sum_{m\in\mathbb Z}\hat\varphi(m/x).
+\]
+Since $\varphi$ is even and $\varphi(0)=\hat\varphi(0)=\int\varphi=0$, both sides are twice the sums over $n,m\ge1$. Put $x=e^y$ and multiply by $e^{y/2}$; this gives \eqref{eq:poisson}.
+
+For $y\le0$ we have $|\hat\varphi(me^{-y})|\le C_\varphi m^{-\alpha}e^{\alpha y}$, which gives the bound on $e$. The series differentiated termwise,
+\[
+e'(y)=-\tfrac12e(y)-e^{-y/2}\sum_{m\ge1}(me^{-y})\hat\varphi'(me^{-y}),
+\]
+converges uniformly on $(-\infty,0]$ by the bound on $\xi\hat\varphi'$, which justifies the differentiation and gives the bound on $e'$.
+\end{proof}
+
+\begin{lemma}[Radical]\label{lem:radical}
+Assume (H). Then $\hat e$ is holomorphic on $\operatorname{Im}z<\alpha-\frac12$, and $\hat e(\gamma_\rho)=\hat e(-\gamma_\rho)=0$ for every nontrivial zero $\rho$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:poisson} and $e=0$ on $[a,\infty)$, the integral $\hat e(z)=\int_{-\infty}^ae(y)e^{izy}dy$ converges locally uniformly on $\operatorname{Im}z<\alpha-\frac12$, so $\hat e$ is holomorphic there. This half-plane contains the strip $|\operatorname{Im}z|\le\frac12$.
+
+Put $\Phi(z)=\int_0^\infty\varphi(v)v^{-\frac12+iz}dv$. It is holomorphic on $\operatorname{Im}z<\frac52$, because $\varphi=O(v^2)$ at $0$ and $\varphi$ has compact support. For $\operatorname{Im}z<-\frac12$, Fubini's theorem is justified by $\sum_nn^{-(\frac12-\operatorname{Im}z)}<\infty$, and the substitution $v=ne^y$ gives
+\[
+\hat e(z)=\sum_{n\ge1}\int_\R\varphi(ne^y)e^{(\frac12+iz)y}dy=\sum_{n\ge1}n^{-\frac12-iz}\Phi(z)=\zeta(\tfrac12+iz)\Phi(z).
+\]
+Both sides are holomorphic on the connected open set $D=\{\operatorname{Im}z<\alpha-\frac12\}\setminus\{-\frac i2\}$, and they agree on an open subset of $D$. By the identity theorem they agree on $D$. Since $\rho\ne1$, we have $\gamma_\rho\in D$ and $\hat e(\gamma_\rho)=\zeta(\rho)\Phi(\gamma_\rho)=0$. Likewise $-\gamma_\rho=\gamma_{1-\rho}$ and $\zeta(1-\rho)=0$. Only the equation $\zeta(\rho)=0$ is used, not the location of $\rho$.
 \end{proof}
 
 \begin{proposition}[Zero-side estimate]\label{prop:zero}
-With $A_0=\int_{-\infty}^{-a}|r|e^{|y|/2}$ and $A_1=|r(-a)|e^{a/2}+\int_{-\infty}^{-a}|r'|e^{|y|/2}$,
+Put
 \[
-|W(k)|\le2(A_0+A_1)^2S,\qquad S\le2\big(1+\tfrac{\gamma_E}{2}-\tfrac12\log4\pi\big)<0.0462 .
+A_0=\int_{-\infty}^{-a}|r(y)|e^{|y|/2}dy,\qquad A_1=|r(-a)|e^{a/2}+\int_{-\infty}^{-a}|r'(y)|e^{|y|/2}dy .
+\]
+Then
+\[
+|W(k)|\le2(A_0+A_1)^2S,\qquad S\le2\big(1+\tfrac{\gamma_E}{2}-\tfrac12\log4\pi\big)<0.046192 .
 \]
 \end{proposition}
 \begin{proof}
-By Lemmas~\ref{lem:EF} and~\ref{lem:radical}, $W(k)=\sum m_\rho\hat r(\gamma_\rho)\hat r(-\gamma_\rho)$. On the strip we have $|\hat r|\le A_0$, and one integration by parts gives $|z\hat r(z)|\le A_1$. For the bound on $S$, pair $\rho$ with $1-\bar\rho$ and use the classical identity $\sum_\rho m_\rho\operatorname{Re}(1/\rho)=1+\frac{\gamma_E}2-\frac12\log4\pi$.
+By Lemma~\ref{lem:EF} applied to $k$, and by Lemma~\ref{lem:radical} with $e=k+r$, we have $\hat k(\pm\gamma_\rho)=-\hat r(\pm\gamma_\rho)$ and hence
+\[
+W(k)=\sum_\rho m_\rho\hat r(\gamma_\rho)\hat r(-\gamma_\rho).
+\]
+On the strip $|\operatorname{Im}z|\le\frac12$ and for $y<0$ we have $|e^{izy}|\le e^{|y|/2}$, so $|\hat r(z)|\le A_0$. Integrating by parts once,
+\[
+iz\,\hat r(z)=r(-a)e^{-iza}-\int_{-\infty}^{-a}r'(y)e^{izy}dy,
+\]
+where the boundary term at $-\infty$ vanishes because $|r(y)|e^{|y|/2}=O(e^{(\alpha-1)y})$ and $\alpha>1$. Hence $|z\hat r(z)|\le A_1$. Now $\min(A_0,A_1/|z|)^2\le2(A_0+A_1)^2/(1+|z|^2)$: for $|z|\le1$ use the first entry, and for $|z|>1$ the second. Since $|{-\gamma_\rho}|=|\gamma_\rho|$, this gives $|W(k)|\le2(A_0+A_1)^2S$.
+
+For the bound on $S$, write $\rho=\beta+it$; then $|\gamma_\rho|^2\ge t^2$. The map $\rho\mapsto1-\bar\rho$ is an involution on the zeros that preserves multiplicities. If $\beta\ne\frac12$, then
+\[
+\operatorname{Re}\frac1\rho+\operatorname{Re}\frac1{1-\bar\rho}=\frac{\beta}{\beta^2+t^2}+\frac{1-\beta}{(1-\beta)^2+t^2}\ge\frac1{1+t^2},
+\]
+since $\beta^2,(1-\beta)^2\le1$; the pair contributes at most $2/(1+t^2)$ to $S$. If $\beta=\frac12$, then $\operatorname{Re}(1/\rho)\ge\frac12(1+t^2)^{-1}$. Hence $S\le2\sum_\rho m_\rho\operatorname{Re}(1/\rho)$, and the classical unconditional identity $\sum_\rho m_\rho\operatorname{Re}(1/\rho)=1+\frac{\gamma_E}2-\frac12\log4\pi=0.0230957\ldots$~\cite[Ch.~12]{Davenport} gives the bound.
 \end{proof}
 
-\begin{lemma}[Poisson form]\label{lem:F5}
-Let $T_0(s)=\int_s^\infty|\hat\varphi|$ and $T_1(s)=\int_s^\infty t|\hat\varphi'(t)|\,dt$. Then
+\begin{lemma}[Poisson form of $A_0,A_1$]\label{lem:F5}
+Let $T_0(s)=\int_s^\infty|\hat\varphi(t)|\,dt$ and $T_1(s)=\int_s^\infty t|\hat\varphi'(t)|\,dt$. Then
 \[
-A_0+A_1\le B_\varphi(\lambda):=\tfrac32\sum_m\frac{T_0(m\lambda)}m+\sum_m\frac{T_1(m\lambda)}m+\lambda\sum_m|\hat\varphi(m\lambda)| .
+A_0+A_1\le B_\varphi(\lambda):=\frac32\sum_{m\ge1}\frac{T_0(m\lambda)}m+\sum_{m\ge1}\frac{T_1(m\lambda)}m+\lambda\sum_{m\ge1}|\hat\varphi(m\lambda)| .
 \]
 \end{lemma}
+\begin{proof}
+Put $x=e^{-y}\in(\lambda,\infty)$ for $y<-a$. Then $e^{|y|/2}=x^{1/2}$, $|dy|=dx/x$, and $r=x^{1/2}\sum_m\hat\varphi(mx)$ by \eqref{eq:poisson}. Hence
+\[
+A_0\le\sum_{m\ge1}\int_\lambda^\infty|\hat\varphi(mx)|\,dx=\sum_{m\ge1}\frac{T_0(m\lambda)}m .
+\]
+Next, $r'(y)=-x\frac{d}{dx}\big(x^{1/2}\sum_m\hat\varphi(mx)\big)$, so
+\[
+|r'(y)|e^{|y|/2}\,|dy|\le\Big(\tfrac12\sum_m|\hat\varphi(mx)|+\sum_m|mx\,\hat\varphi'(mx)|\Big)dx,
+\]
+and $\int_\lambda^\infty|mx\,\hat\varphi'(mx)|\,dx=T_1(m\lambda)/m$. Finally $|r(-a)|e^{a/2}=\lambda|\sum_m\hat\varphi(m\lambda)|$.
+\end{proof}
 
 \begin{proposition}[Master proposition]\label{prop:master}
-Under (H), if $\|k\|^2\ge c_0^2$, then $\lambda_{\min}(\lambda)\le2S\,B_\varphi(\lambda)^2/c_0^2$.
+Assume (H). If $\|k\|^2\ge c_0^2>0$, then $\lambda_{\min}(\lambda)\le2S\,B_\varphi(\lambda)^2/c_0^2$.
 \end{proposition}
 \begin{proof}
 By \eqref{eq:rayleigh}, $\lambda_{\min}\le W(k)/\|k\|^2\le|W(k)|/\|k\|^2$. Now apply Proposition~\ref{prop:zero} and Lemma~\ref{lem:F5}. The absolute value is needed because, without RH, $W(k)$ could be negative.
@@ -188,91 +262,238 @@ By \eqref{eq:rayleigh}, $\lambda_{\min}\le W(k)/\|k\|^2\le|W(k)|/\|k\|^2$. Now a
 
 \section{Proof of Theorem~\ref{thm:A}}\label{sec:A}
 
-Let $h(x)=\frac\pi2x^2(2\pi x^2-3)e^{-\pi x^2}$. It is a combination of the Hermite functions $h_0$ and $h_4$, so $\hat h=h$; moreover $h(0)=\int h=0$. Put $\delta=\lambda^{-2}$ and $b=\lambda-2\delta$. Let $\chi$ be the $C^2$ cut-off built from the smoothstep $S_5(t)=10t^3-15t^4+6t^5$: it equals $1$ on $|x|\le b$ and $0$ on $|x|\ge b+\delta$. Let $\psi=\frac{315}{32}x^2(1-x^2)^3_+$. Set
+\subsection{Construction}
+Let $h(x)=\frac\pi2x^2(2\pi x^2-3)e^{-\pi x^2}$. It is a combination of the Hermite functions of degrees $0$ and $4$, so $\hat h=h$. Moreover $h(0)=\int h=0$, and $|h|$ is decreasing on $[0.977,\infty)$.
+
+Put $\delta=\lambda^{-2}$ and $b=\lambda-2\delta$. Let $S_5(t)=10t^3-15t^4+6t^5$ be the $C^2$ smoothstep, with
+\[
+M_1=\sup|S_5'|=\tfrac{15}8,\qquad M_2=\sup|S_5''|=\tfrac{10}{\sqrt3},\qquad M_3=\sup|S_5'''|=60 .
+\]
+Let $\chi$ be $1$ on $|x|\le b$, equal to $1-S_5((|x|-b)/\delta)$ on $b\le|x|\le b+\delta$, and $0$ beyond. Let $\psi=\frac{315}{32}x^2(1-x^2)^3\mathbf 1_{|x|\le1}$; it is $C^2$, with $\psi(0)=0$ and $\int\psi=1$. Set
 \[
 \varphi_A=h\chi+\varepsilon\psi,\qquad\varepsilon=\int h(1-\chi),\qquad g=h(1-\chi).
 \]
-Then $\varphi_A$ satisfies (H) with $\alpha=\alpha'=2$, and $\hat\varphi_A=h-\hat g+\varepsilon\hat\psi$.
 
-\begin{lemma}[Explicit tails]
-Write $h^{(i)}=Q_ie^{-\pi x^2}$ and $U_i(b)=\sum_k|q_{ik}|b^ke^{-\pi b^2}$. Two integrations by parts, the bounds $\sup|S_5^{(j)}|=\frac{15}8,\frac{10}{\sqrt3},60$, and the Gaussian tail bound
-\[
-\int_s^\infty t^ke^{-\pi t^2}\,dt\le\frac{s^{k-1}e^{-\pi s^2}}{2\pi\big(1-\frac{k-1}{2\pi s^2}\big)}
-\]
-give $B_{\varphi_A}(\lambda)\le B(\lambda)$. Here $B(\lambda)$ is an explicit finite expression in $U_i(b)$, Gaussian tails, $\|\psi''\|_1=27.194$ and $\|(x\psi)'''\|_1=158.23$. Every term of $B(\lambda)e^{\pi\lambda^2}$ is bounded by a polynomial in $\lambda$ of degree $\le8$ times $e^{4\pi/\lambda}$.
-\end{lemma}
-
-\begin{lemma}[Lower bound for $\|k\|$]
-For $\mu\ge5$, $\|k\|^2\ge\int_{-0.1}^{0.1}|e|^2\ge0.00894$.
+\begin{lemma}\label{lem:A1}
+$\varphi_A$ satisfies (H) with $\alpha=\alpha'=2$. More precisely, for $t>0$,
+\begin{equation}\label{eq:A1}
+|\hat\varphi_A(t)|\le|h(t)|+\frac{D_0}{(2\pi t)^2},\qquad |t\hat\varphi_A'(t)|\le|th'(t)|+\frac{D_1}{(2\pi t)^2},
+\end{equation}
+where $D_0=\|g''\|_1+|\varepsilon|\,\|\psi''\|_1$ and $D_1=\|(xg)'''\|_1+|\varepsilon|\,\|(x\psi)'''\|_1$.
 \end{lemma}
 \begin{proof}
-Ball arithmetic (Arb~\cite{Arb}) gives $\int_{-0.1}^{0.1}e_h^2\ge0.0093256$, where $e_h(y)=e^{y/2}\sum h(ne^y)$. The perturbation $e-e_h$ is at most $4.5\times10^{-3}$ at $\mu=5$, and it decreases in $\mu$. Conclude by Minkowski's inequality.
+Evenness and $\varphi_A\in C^2$ are clear, and the support lies in $[-(\lambda-\delta),\lambda-\delta]$. Near $0$, $\varphi_A=h+\varepsilon\psi=O(v^2)$. Also $\int\varphi_A=\int h\chi+\varepsilon=\int h=0$.
+
+Since $h\chi=h-g$, we have $\hat\varphi_A=h-\hat g+\varepsilon\hat\psi$. The function $g$ is $C^2$, $g''$ is absolutely continuous and $g'''\in L^1$. Two integrations by parts give $|\hat g(t)|\le\|g''\|_1/(2\pi t)^2$. Moreover $t\hat g'(t)=-\widehat{(xg)'}(t)$, and two further integrations by parts give $|t\hat g'(t)|\le\|(xg)'''\|_1/(2\pi t)^2$. The same holds for $\psi$.
 \end{proof}
 
-Proposition~\ref{prop:master} now gives Theorem~\ref{thm:A}.
+\subsection{Explicit tails}
+Write $h^{(i)}=Q_ie^{-\pi x^2}$ with polynomials $Q_i=\sum_kq_{ik}x^k$, and put $U_i(b)=\sum_k|q_{ik}|b^ke^{-\pi b^2}$. Each $x^ke^{-\pi x^2}$ decreases for $x\ge\sqrt{k/2\pi}$, so $U_i(b)\ge\sup_{x\ge b}|h^{(i)}(x)|$ for $b\ge1.13$ and $i\le3$. For the Gaussian tails we use
+\begin{equation}\label{eq:gausstail}
+\int_s^\infty t^ke^{-\pi t^2}dt\le\frac{s^{k-1}e^{-\pi s^2}}{2\pi\big(1-\frac{k-1}{2\pi s^2}\big)}\quad(k\ge1),\qquad \int_s^\infty e^{-\pi t^2}dt\le\frac{e^{-\pi s^2}}{2\pi s},
+\end{equation}
+the first by one integration by parts. With $\chi'=O(M_1/\delta)$, $\chi''=O(M_2/\delta^2)$, $\chi'''=O(M_3/\delta^3)$ on two intervals of length $\delta$, the Leibniz rule gives
+\begin{equation}\label{eq:A2}
+\begin{aligned}
+\|g''\|_1&\le2\Big(\textstyle\int_b^\infty|h''|+2M_1U_1(b)+M_2U_0(b)/\delta\Big),\\
+\|(xg)'''\|_1&\le2\Big(\textstyle\int_b^\infty x|h'''|+\lambda\big(3M_1U_2(b)+3M_2U_1(b)/\delta+M_3U_0(b)/\delta^2\big)\Big)+3\|g''\|_1,\\
+|\varepsilon|&\le2\textstyle\int_b^\infty|h|,\qquad \|\psi''\|_1=27.194\ldots,\qquad \|(x\psi)'''\|_1=158.23\ldots
+\end{aligned}
+\end{equation}
+Here we used $(xg)'''=xg'''+3g''$ and $b+\delta\le\lambda$. The integrals $\int_b^\infty|h^{(i)}|$ and $\int_b^\infty x|h'''|$ are bounded termwise by \eqref{eq:gausstail}. Inserting \eqref{eq:A1} into Lemma~\ref{lem:F5} and using $\sum_mm^{-2}=\zeta(2)$ gives $B_{\varphi_A}(\lambda)\le B(\lambda)$, where
+\begin{equation}\label{eq:Bdef}
+B(\lambda):=\sum_{m\ge1}\Big[\frac{3}{2m}\int_{m\lambda}^\infty|h|+\frac1m\int_{m\lambda}^\infty t|h'(t)|\,dt+\lambda|h(m\lambda)|\Big]+\frac{\zeta(2)\big(\frac52D_0+D_1\big)}{4\pi^2\lambda},
+\end{equation}
+with $D_0,D_1$ bounded by \eqref{eq:A2}. Each bracket is at most $P(m\lambda)e^{-\pi m^2\lambda^2}$ with $P$ a polynomial of degree at most $6$, so the terms with $m\ge60$ contribute less than $10^{-10^4}$ for $\mu\ge5$; in the computations we sum $m\le59$ and add this bound.
+
+As a check of the direction of the inequalities, $B$ exceeds the value of $A_0+A_1$ computed from the definitions for the same $\varphi_A$ by factors $140$, $110$, $86$, $80$ at $\mu=5,7,11,13$.
+
+\subsection{Lower bound for \texorpdfstring{$\|k\|$}{||k||}}
+\begin{lemma}\label{lem:A3}
+For $\mu\ge5$, $\|k\|^2\ge c_0^2:=0.00894$.
+\end{lemma}
+\begin{proof}
+Since $a\ge\frac12\log5>0.8$, we have $\|k\|^2\ge\int_{-\eta}^{\eta}|e|^2$ with $\eta=0.1$. Let $e_h(y)=e^{y/2}\sum_nh(ne^y)$. Ball arithmetic (Arb~\cite{Arb}, $400$ subintervals, with the tail of the sum over $n$ bounded explicitly) gives $\int_{-\eta}^\eta e_h^2\ge0.0093256$.
+
+On $[-\eta,\eta]$ we have $e-e_h=e^{y/2}\sum_n(\varepsilon\psi-g)(ne^y)$. Only $n=1$ meets $\operatorname{supp}\psi$, since $2e^{-\eta}>1$. The function $g$ vanishes on $[0,b]$ and $|g|\le|h|$. The points $ne^y\ge b$ have spacing $e^y\ge e^{-\eta}$, and $|h|$ decreases on $[b,\infty)$, so the first such point contributes at most $U_0(b)$ and the others at most $e^{\eta}\int_b^\infty|h|$. Hence $|e-e_h|\le E$ on $[-\eta,\eta]$, where
+\[
+E=e^{\eta/2}\Big(|\varepsilon|\sup\psi+U_0(b)+e^{\eta}\int_b^\infty|h|\Big).
+\]
+By Minkowski's inequality, $\|k\|\ge\sqrt{0.0093256}-\sqrt{2\eta}\,E$. At $\mu=5$ we have $E\le4.5\times10^{-3}$, which gives $\|k\|^2\ge0.00894$. Since $b$ increases with $\mu$, $E$ decreases, and the bound holds for all $\mu\ge5$.
+\end{proof}
+
+\subsection{Conclusion}
+Proposition~\ref{prop:master}, Lemma~\ref{lem:A1}, the bound $B_{\varphi_A}\le B$ and Lemma~\ref{lem:A3} give $\lambda_{\min}(\lambda)\le2SB(\lambda)^2/c_0^2$ for $\mu\ge5$.
+
+Every term of $B(\lambda)e^{\pi\lambda^2}$ is at most a polynomial in $\lambda$ of degree at most $8$ times $e^{\pi(\lambda^2-b^2)}$, and $\lambda^2-b^2\le4/\lambda$. The top degree comes from the term $\lambda M_3U_0(b)/\delta^2$ in $D_1$, divided by $\lambda$ in \eqref{eq:Bdef}. Hence $B(\lambda)\le K\mu^4e^{-\pi\mu}$ with an effective $K$, and $\lambda_{\min}\le C\mu^8e^{-2\pi\mu}$.
 
 For the closed form, put $F(\lambda)=B(\lambda)e^{\pi\mu}/\mu^4$. We show $F\le12298$ for all $\mu\ge5$.
 \begin{itemize}
-\item On $5\le\mu\le10^4$ we evaluate $F$ in ball arithmetic on $48{,}882$ intervals in $\lambda$. The Gaussian factors are combined with $e^{\pi\lambda^2}$ into $e^{-\pi(s^2-\lambda^2)}$, so that the enclosures do not blow up. The maximum is at $\mu=5$, where the point value is $12163.95$.
-\item For $\lambda\ge100$, replace $b$ by $\lambda$ in the polynomials $P_i$ and bound $e^{\pi(\lambda^2-b^2)}\le e^{4\pi/100}$. This turns $B(\lambda)e^{\pi\lambda^2}$ into a Laurent polynomial in $\lambda$ with nonnegative coefficients and top degree $8$. Hence $F$ is nonincreasing there, and $F\le57.0$.
+\item On $5\le\mu\le10^4$ we evaluate $F$ in ball arithmetic on $48{,}882$ intervals in $\lambda$. The Gaussian factors are combined with $e^{\pi\lambda^2}$ into $e^{-\pi(s^2-\lambda^2)}$, so that the enclosures do not blow up. The coefficients $q_{ik}$ and the norms of $\psi$ are computed exactly. The maximum is attained near $\mu=5$, where the point value is $12163.95$.
+\item For $\lambda\ge100$, replace $b$ by $\lambda$ in the polynomials, bound $e^{\pi(\lambda^2-b^2)}\le e^{4\pi/100}$ and the factors $(1-\frac{k-1}{2\pi s^2})^{-1}$ by their values at $s=99.9$. This turns the $m=1$ part of $B(\lambda)e^{\pi\lambda^2}$ into a Laurent polynomial in $\lambda$ with nonnegative coefficients and top degree $8$, so its quotient by $\lambda^8$ is nonincreasing, and at $\lambda=100$ it is at most $57.0$. The terms with $m\ge2$ contribute less than $10^{-10^4}$.
 \end{itemize}
-With $S\le0.046192$ and $c_0^2\ge0.00894$, this gives the constant $1.563\times10^9$.
-
-As a check of the direction of the inequalities, $B$ exceeds the value of $A_0+A_1$ computed from the definitions by factors $80$--$140$ for $\mu=5$--$13$.
+With $S\le0.046192$ and $c_0^2=0.00894$, this gives $2S\cdot12298^2/c_0^2\le1.563\times10^9$. This completes the proof of Theorem~\ref{thm:A}.
 
 \section{Proof of Theorem~\ref{thm:B}}\label{sec:B}
 
-Let $\nu=2$ and $\beta=2\pi\lambda^2$. For $\alpha>-1$ put $\F_\alpha(s)=\sum_j(s/4)^j/(2^\alpha j!\,\Gamma(j+\alpha+1))$. Let
+\subsection{Construction}
+Let $\beta=2\pi\lambda^2$. For $\alpha>-1$ put
+\[
+\F_\alpha(z)=\sum_{j\ge0}\frac{(z/4)^j}{2^\alpha j!\,\Gamma(j+\alpha+1)} ,
+\]
+an entire function of $z$. Then $\F_\alpha(w^2)=I_\alpha(w)/w^\alpha$ and $\F_\alpha(-w^2)=J_\alpha(w)/w^\alpha$ for $w>0$, and termwise differentiation gives
+\begin{equation}\label{eq:Fderiv}
+\frac{d}{d\omega}\F_\alpha(\beta^2-\omega^2)=-\omega\,\F_{\alpha+1}(\beta^2-\omega^2).
+\end{equation}
+Let
 \[
 \Phi_\beta(t)=(1-t^2)I_2\big(\beta\sqrt{1-t^2}\big)\mathbf1_{|t|\le1},\qquad
-\varphi_B(x)=\frac{x^2(x^2-s)\,\Phi_\beta(x/\lambda)}{I_2(\beta)},
+\varphi_B(x)=\frac{x^2(x^2-\sigma)\,\Phi_\beta(x/\lambda)}{I_2(\beta)},
 \]
-where $s$ is chosen so that $\int\varphi_B=0$.
+where $\sigma=\int x^4\Phi_\beta(x/\lambda)dx\big/\int x^2\Phi_\beta(x/\lambda)dx$, so that $\int\varphi_B=0$. Note $0<\sigma\le\lambda^2$. Since $I_2(z)=z^2E(z^2)$ with $E$ entire, $\Phi_\beta(t)=\beta^2(1-t^2)^2E(\beta^2(1-t^2))$ on $[-1,1]$.
 
-\begin{lemma}[Sonine--Gegenbauer]
-$\int_{-1}^1(1-t^2)^{\nu/2}I_\nu(\beta\sqrt{1-t^2})e^{i\omega t}\,dt=\sqrt{2\pi}\,\beta^\nu\,\F_{\nu+\frac12}(\beta^2-\omega^2)$ \cite[Ch.~XII]{Watson}.
-\end{lemma}
-
-\begin{lemma}[Bessel bounds]
-\begin{itemize}
-\item $|J_\alpha|\le1$ for $\alpha\ge0$, and $|J_\alpha(w)|\le(w/2)^\alpha/\Gamma(\alpha+1)$ \cite[10.14.1, 10.14.4]{DLMF}.
-\item For $\nu\ge\frac12$: $I_\nu(z)\le e^z/\sqrt{2\pi z}$ for $z>0$, and $I_\nu(z)\ge c_\nu e^z/\sqrt z$ for $z\ge1$, where $c_\nu=e^{-1}2^{-\nu}/(\sqrt\pi\,\Gamma(\nu+\frac32))$.
-\end{itemize}
-The last two bounds follow from the Poisson integral for $I_\nu$.
-\end{lemma}
-
-With $\omega=2\pi\lambda\xi$, the Sonine--Gegenbauer formula expresses $\hat\varphi_B$ through $\partial_\omega^j\F_{5/2}(\beta^2-\omega^2)$. Beyond the band edge $|\xi|\ge\lambda$ every $\F$ is evaluated at a nonpositive argument. The prefactor $1/I_2(\beta)\le c_2^{-1}\sqrt\beta e^{-\beta}$ then gives
+\begin{lemma}[Sonine--Gegenbauer]\label{lem:SG}
+For $\nu\ge0$ and $\omega\in\R$,
 \[
-|\hat\varphi_B(\xi)|\le C\lambda^qe^{-2\pi\lambda^2}(\lambda/|\xi|)^{5/2},\qquad
-|\xi\hat\varphi_B'(\xi)|\le C\lambda^qe^{-2\pi\lambda^2}(\lambda/|\xi|)^{3/2}.
+\int_{-1}^1(1-t^2)^{\nu/2}I_\nu\big(\beta\sqrt{1-t^2}\big)e^{i\omega t}\,dt=\sqrt{2\pi}\,\beta^\nu\,\F_{\nu+\frac12}(\beta^2-\omega^2).
 \]
-So (H) holds with $(\alpha,\alpha')=(\frac52,\frac32)$, and $B_{\varphi_B}\le C'\lambda^{q+1}e^{-2\pi\lambda^2}$.
+\end{lemma}
+\begin{proof}
+Expand $I_\nu$ in its power series and integrate termwise, using $\int_{-1}^1(1-t^2)^me^{i\omega t}dt=\sqrt\pi\,\Gamma(m+1)(2/\omega)^{m+\frac12}J_{m+\frac12}(\omega)$ and the series of $J_{m+\frac12}$; the resulting double series rearranges into the series of $\F_{\nu+\frac12}$. The formula is classical~\cite[Ch.~XII]{Watson}. We also checked it numerically at $18$ points, with relative error at most $3\times10^{-17}$.
+\end{proof}
 
-For the lower bound on $\|k\|$, dominate $\Phi_\beta(x/\lambda)/I_2(\beta)\le36.14\,e^{-\pi x^2}$ using the bounds for $I_\nu$. Then $\varphi_B\to\pi^{-2}h$, and $\|k\|$ is bounded below as in Section~\ref{sec:A}. This last step is qualitative, so $\lambda_0$ is not yet effective. Proposition~\ref{prop:master} gives Theorem~\ref{thm:B}.
+\begin{lemma}[Bessel bounds]\label{lem:bessel}
+\begin{enumerate}
+\item[(i)] $|J_\alpha(w)|\le1$ for $\alpha\ge0$, and $|J_\alpha(w)|\le(w/2)^\alpha/\Gamma(\alpha+1)$ for $\alpha\ge-\frac12$, $w\ge0$ \cite[10.14.1, 10.14.4]{DLMF}. Consequently $|\F_\alpha(-w^2)|\le\min\big(2^{-\alpha}\Gamma(\alpha+1)^{-1},\,w^{-\alpha}\big)$.
+\item[(ii)] For $\nu\ge\frac12$ and $z>0$, $I_\nu(z)\le e^z/\sqrt{2\pi z}$.
+\item[(iii)] For $\nu\ge\frac12$ and $z\ge1$, $I_\nu(z)\ge c_\nu e^z/\sqrt z$, with $c_\nu=e^{-1}2^{-\nu}/(\sqrt\pi\,\Gamma(\nu+\frac32))$. In particular $c_2=0.015613\ldots$
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+For (ii) and (iii) use the Poisson integral
+\[
+I_\nu(z)=\frac{(z/2)^\nu}{\sqrt\pi\,\Gamma(\nu+\frac12)}\int_{-1}^1(1-t^2)^{\nu-\frac12}e^{zt}dt .
+\]
+For (ii), $(1-t^2)^{\nu-\frac12}\le2^{\nu-\frac12}(1-t)^{\nu-\frac12}$ and $\int_{-1}^1(1-t)^{\nu-\frac12}e^{zt}dt\le e^z\Gamma(\nu+\frac12)z^{-\nu-\frac12}$. For (iii), restrict to $t\in[1-1/z,1]$; there $(1-t^2)^{\nu-\frac12}\ge(1-t)^{\nu-\frac12}$ and $e^{zt}\ge e^{z-1}$, and $\int_0^{1/z}u^{\nu-\frac12}du=z^{-\nu-\frac12}/(\nu+\frac12)$.
+\end{proof}
+Numerically, for $\nu=2$, $\max_{0<z\le2000}I_2(z)\sqrt{2\pi z}e^{-z}=0.99906$ and $\min_{z\ge1}I_2(z)\sqrt ze^{-z}=0.04994$.
+
+\subsection{The Fourier transform of \texorpdfstring{$\varphi_B$}{phi\_B}}
+Put $t=x/\lambda$ and $\omega=2\pi\lambda\xi$, so that $|\omega|\ge\beta$ if and only if $|\xi|\ge\lambda$. Multiplication by $t^2$ corresponds to $-\partial_\omega^2$. By Lemma~\ref{lem:SG} with $\nu=2$,
+\begin{equation}\label{eq:phiBhat}
+\hat\varphi_B(\xi)=\frac{\lambda}{I_2(\beta)}\big(\lambda^4\partial_\omega^4+\sigma\lambda^2\partial_\omega^2\big)G(\omega),\qquad G(\omega)=\sqrt{2\pi}\,\beta^2\,\F_{5/2}(\beta^2-\omega^2).
+\end{equation}
+By \eqref{eq:Fderiv}, each $\omega$-derivative either lowers the power of $\omega$ by one, or raises it by one and the index of $\F$ by one. Hence $\partial_\omega^jG$ is a linear combination, with integer coefficients depending only on $j$, of the terms $\omega^{2l-j}\F_{\frac52+l}(\beta^2-\omega^2)$ with $j/2\le l\le j$. Since $\xi\partial_\xi=\omega\partial_\omega$ maps $\omega^i\F_{\frac52+l}$ to $i\omega^i\F_{\frac52+l}-\omega^{i+2}\F_{\frac72+l}$, the function $\xi\hat\varphi_B'(\xi)$ is a combination of terms $\omega^i\F_{\frac52+l}$ with $i\le l+1$ and $l\le5$, and $\hat\varphi_B$ one of terms with $i\le l\le4$. Explicitly, writing $\F_\alpha$ for $\F_\alpha(\beta^2-\omega^2)$,
+\[
+\frac{G''}{\sqrt{2\pi}\beta^2}=-\F_{\frac72}+\omega^2\F_{\frac92},\qquad
+\frac{G''''}{\sqrt{2\pi}\beta^2}=3\F_{\frac92}-6\omega^2\F_{\frac{11}2}+\omega^4\F_{\frac{13}2},
+\]
+and $\omega\partial_\omega$ of the last term is $4\omega^4\F_{\frac{13}2}-\omega^6\F_{\frac{15}2}$, which is the term with the largest power $i=6$.
+
+\begin{lemma}\label{lem:B3}
+$\varphi_B$ satisfies (H) with $(\alpha,\alpha')=(\frac52,\frac32)$. Moreover, for $|\xi|\ge\lambda$ and $\lambda\ge1$,
+\begin{equation}\label{eq:B4}
+|\hat\varphi_B(\xi)|\le C\lambda^{18}e^{-2\pi\lambda^2}(\lambda/|\xi|)^{5/2},\qquad |\xi\hat\varphi_B'(\xi)|\le C\lambda^{22}e^{-2\pi\lambda^2}(\lambda/|\xi|)^{3/2},
+\end{equation}
+with an explicit absolute constant $C$.
+\end{lemma}
+\begin{proof}
+Evenness, $\varphi_B=O(v^2)$ and $\int\varphi_B=0$ are clear. By the formula for $\Phi_\beta$ above, $\varphi_B$ is real-analytic on $(-\lambda,\lambda)$ and vanishes to second order at $\pm\lambda$; so it is $C^1$, piecewise $C^\infty$, and $\varphi_B(\pm\lambda)=0$.
+
+For $|\xi|\ge\lambda$ every $\F$ in \eqref{eq:phiBhat} is evaluated at $-w^2\le0$, where $w=\sqrt{\omega^2-\beta^2}$. By Lemma~\ref{lem:bessel}(i):
+\begin{itemize}
+\item for $\beta\le|\omega|\le2\beta$, $|\omega^i\F_{\frac52+l}(-w^2)|\le(2\beta)^i$, with $i\le4$ for the terms of $\hat\varphi_B$ and $i\le6$ for those of $\xi\hat\varphi_B'$;
+\item for $|\omega|\ge2\beta$, $w\ge\frac{\sqrt3}2|\omega|$ and $|\omega^i\F_{\frac52+l}(-w^2)|\le(2/\sqrt3)^{\frac52+l}|\omega|^{i-l-\frac52}$, which is at most a constant times $|\omega|^{-5/2}$ for the terms of $\hat\varphi_B$ ($i\le l$) and $|\omega|^{-3/2}$ for the terms of $\xi\hat\varphi_B'$ ($i\le l+1$).
+\end{itemize}
+In the first range $(\lambda/|\xi|)^{5/2}\ge2^{-5/2}$; in the second $|\omega|^{-\kappa}=(2\pi\lambda^2)^{-\kappa}(\lambda/|\xi|)^\kappa$. Since $\sigma\le\lambda^2$, the prefactor in \eqref{eq:phiBhat} is at most $2\lambda^5\sqrt{2\pi}\beta^2/I_2(\beta)$, and $1/I_2(\beta)\le c_2^{-1}\sqrt\beta\,e^{-\beta}$ by Lemma~\ref{lem:bessel}(iii). The prefactor is therefore $O(\lambda^{10}e^{-2\pi\lambda^2})$, and $(2\beta)^4=O(\lambda^8)$, $(2\beta)^6=O(\lambda^{12})$; this gives \eqref{eq:B4}. For $|\xi|\le\lambda$, $\hat\varphi_B$ and $\xi\hat\varphi_B'$ are bounded because $\varphi_B$ and $x\varphi_B$ are integrable, so (H) holds.
+\end{proof}
+Numerically, the true decay rates of $\hat\varphi_B$ and $\xi\hat\varphi_B'$ are $|\xi|^{-3}$ and $|\xi|^{-2}$ (checked up to $\xi=1280\lambda$), and $\sup_{\lambda\le\xi\le5\lambda}(|\hat\varphi_B|+|\xi\hat\varphi_B'|)e^{2\pi\mu}$ grows like $\mu^{11.06}$ for $\mu=5$--$17$. More precisely, for $\mu=5,7,\dots,17$ the quotients of $\sup_{\lambda\le\xi\le5\lambda}|\hat\varphi_B(\xi)|e^{2\pi\mu}(\xi/\lambda)^{5/2}$ by $\lambda^{18}$ and of $\sup_{\lambda\le\xi\le5\lambda}|\xi\hat\varphi_B'(\xi)|e^{2\pi\mu}(\xi/\lambda)^{3/2}$ by $\lambda^{22}$ stay in $[5.67,5.80]$ and $[13.8,15.2]$; the maxima are attained at the band edge $\xi=\lambda$. The powers in \eqref{eq:B4} cannot be lowered, as the following lower bound shows.
+
+\begin{remark}[Lower bound at the band edge]\label{rem:edge}
+At $\xi=\lambda$ we have $\omega=\beta$, so every $\F_a$ is evaluated at $0$, where $\F_a(0)=1/(2^a\Gamma(a+1))>0$. The formulas for $G''$ and $G''''$ above give
+\[
+\xi\hat\varphi_B'(\xi)\big|_{\xi=\lambda}=\frac{\lambda\sqrt{2\pi}\beta^2}{I_2(\beta)}\Big[\lambda^4\big(-\beta^6\F_{\frac{15}2}+10\beta^4\F_{\frac{13}2}-15\beta^2\F_{\frac{11}2}\big)+\sigma\lambda^2\big(-\beta^4\F_{\frac{11}2}+3\beta^2\F_{\frac92}\big)\Big],
+\]
+with all $\F_a=\F_a(0)$. Using $\sigma\le\lambda^2$ and the exact ratios of the $\F_a(0)$, the bracket is at least $\lambda^4\beta^6\F_{\frac{15}2}(0)\,(1-345\beta^{-2}-9360\beta^{-4})$ in absolute value, and the last factor is at least $0.64$ for $\mu\ge5$. With $1/I_2(\beta)\ge\sqrt{2\pi\beta}\,e^{-\beta}$ (Lemma~\ref{lem:bessel}(ii)) this gives
+\[
+|\xi\hat\varphi_B'(\lambda)|\ge0.64\cdot\frac{(2\pi)^{19/2}}{2^{15/2}\Gamma(\frac{17}2)}\,\lambda^{22}e^{-2\pi\lambda^2}\ge9.6\,\lambda^{22}e^{-2\pi\lambda^2}\qquad(\mu\ge5).
+\]
+In the same way, now with leading term $\lambda^4\beta^4\F_{\frac{13}2}(0)$ and factor $1-221\beta^{-2}-1716\beta^{-4}\ge0.77$, we get $|\hat\varphi_B(\lambda)|\ge0.77\cdot\frac{(2\pi)^{15/2}}{2^{13/2}\Gamma(\frac{15}2)}\lambda^{18}e^{-2\pi\lambda^2}\ge4.4\,\lambda^{18}e^{-2\pi\lambda^2}$. Hence the powers $18$ and $22$ in \eqref{eq:B4} are optimal. This concerns Lemma~\ref{lem:B3} only. It does not show that $p=46$ is optimal, since $B_{\varphi_B}$ is an integral over $\xi\ge\lambda$, nor does it give any lower bound for $\lambda_{\min}$; a lower bound for $\lambda_{\min}$ would be of the strength of RH.
+\end{remark}
+
+\subsection{Gaussian limit}
+\begin{lemma}\label{lem:B5}
+For $|x|\le\lambda$,
+\[
+\frac{\Phi_\beta(x/\lambda)}{I_2(\beta)}\le C_{\rm dom}e^{-\pi x^2},\qquad C_{\rm dom}=\frac{\sqrt2}{\sqrt{2\pi}\,c_2}=36.14\ldots
+\]
+Moreover, as $\lambda\to\infty$, $\Phi_\beta(x/\lambda)/I_2(\beta)\to e^{-\pi x^2}$ uniformly on compact sets, $\sigma\to\frac3{2\pi}$, and $\varphi_B\to\pi^{-2}h$ uniformly and in $L^1((1+|x|)^Ndx)$ for every $N$.
+\end{lemma}
+\begin{proof}
+Put $t=x/\lambda$. From $\sqrt{1-t^2}\le1-\frac{t^2}2$ we get $\beta\sqrt{1-t^2}\le\beta-\pi x^2=:\beta-d$, with $0\le d\le\beta/2$. Since $I_2$ is increasing and $1-t^2\le1$, Lemma~\ref{lem:bessel}(ii),(iii) give
+\[
+\frac{\Phi_\beta(t)}{I_2(\beta)}\le\frac{I_2(\beta-d)}{I_2(\beta)}\le\frac{e^{\beta-d}/\sqrt{2\pi(\beta-d)}}{c_2e^\beta/\sqrt\beta}\le\frac{\sqrt2}{\sqrt{2\pi}\,c_2}e^{-d}.
+\]
+For the limits, $\beta\sqrt{1-x^2/\lambda^2}=\beta-\pi x^2+O(x^4/\lambda^2)$ and $I_2(\beta-d)/I_2(\beta)=e^{-d}(1+O((1+d)/\beta))$ by the asymptotic expansion of $I_2$. Dominated convergence, with the dominating function $C_{\rm dom}(1+x^4)e^{-\pi x^2}$, gives $\sigma\to\int x^4e^{-\pi x^2}/\int x^2e^{-\pi x^2}=\frac3{2\pi}$ and the remaining claims, since $x^2(x^2-\frac3{2\pi})e^{-\pi x^2}=\pi^{-2}h(x)$.
+\end{proof}
+Numerically, $\sup I_2(\beta-d)e^{d}/I_2(\beta)$ over $\beta\in[2,1000]$, $0\le d\le\beta/2$, is $1.4116$, so $C_{\rm dom}$ is far from sharp.
+
+\subsection{Conclusion}
+Let $e_B$ and $k_B$ be the functions $e$ and $k$ of Section~\ref{sec:master} for $\varphi=\varphi_B$, and let $e_h$ be as in Lemma~\ref{lem:A3}.
+
+\begin{lemma}\label{lem:B6}
+There is $\lambda_0$ such that $\|k_B\|^2\ge\frac12\pi^{-4}\cdot0.0093256$ for $\lambda\ge\lambda_0$.
+\end{lemma}
+\begin{proof}
+On $|y|\le0.1$,
+\[
+|e_B(y)-\pi^{-2}e_h(y)|\le e^{0.05}\sum_{n\ge1}\big|\varphi_B-\pi^{-2}h\big|(ne^y).
+\]
+The right-hand side tends to $0$ uniformly in $|y|\le0.1$: for each fixed $n$ by the uniform convergence in Lemma~\ref{lem:B5}, and the tail $n\ge N$ is small uniformly in $\lambda$ because $|\varphi_B|+\pi^{-2}|h|\le C(1+x^4)e^{-\pi x^2}$ by Lemma~\ref{lem:B5}, since $\sigma$ is bounded for large $\lambda$. By Minkowski's inequality and $\int_{-0.1}^{0.1}e_h^2\ge0.0093256$ (proof of Lemma~\ref{lem:A3}), the claim follows.
+\end{proof}
+The threshold $\lambda_0$ is not effective: an explicit value would need a quantitative form of the convergence in Lemma~\ref{lem:B5}.
+
+By \eqref{eq:B4},
+\begin{gather*}
+T_0(m\lambda)\le\tfrac23C\lambda^{19}e^{-2\pi\lambda^2}m^{-3/2},\qquad T_1(m\lambda)\le2C\lambda^{23}e^{-2\pi\lambda^2}m^{-1/2},\\
+\lambda|\hat\varphi_B(m\lambda)|\le C\lambda^{19}e^{-2\pi\lambda^2}m^{-5/2}.
+\end{gather*}
+Summing over $m$ and using $\lambda\ge1$ gives $B_{\varphi_B}(\lambda)\le C'\lambda^{23}e^{-2\pi\lambda^2}$ with $C'=2C(\zeta(\frac52)+\zeta(\frac32))$. Proposition~\ref{prop:master} with Lemma~\ref{lem:B6} gives
+\[
+\lambda_{\min}(\lambda)\le\frac{2S\,C'^2\lambda^{46}e^{-4\pi\lambda^2}}{\frac12\pi^{-4}\cdot0.0093256}\qquad(\lambda\ge\lambda_0),
+\]
+which is Theorem~\ref{thm:B}.
+
+As a numerical check, for the same $\varphi_B$ the bound $2S(A_0+A_1)^2$ of Proposition~\ref{prop:zero} exceeds $|W(k_B)|$ by factors $46$, $85$ and $207$ at $\mu=5,7,11$.
 
 \section{Numerical evidence}\label{sec:numerics}
 
+\subsection{The prolate quantity \texorpdfstring{$1-\chi_2$}{1-chi\_2}}
+We follow the notation of~\cite[\S6]{Connes26}. The prolate spheroidal wave functions~\cite{SP61} for the window are $h_{n,\lambda}(x)=\mathrm{PS}_{n,0}(2\pi\lambda^2,x/\lambda)$, supported in $[-\lambda,\lambda]$. The Fourier transform of $h_{2m,\lambda}$, restricted to $[-\lambda,\lambda]$, is $\chi_m h_{2m,\lambda}$, where $\chi_m^2=\nu_m$ is the corresponding eigenvalue of time- and band-limiting and the sign of $\chi_m$ is $(-1)^m$. Thus $\chi_2$ belongs to $h_{4,\lambda}$. By a theorem of Fuchs~\cite[Thm.~1]{Fuchs64}, quoted in~\cite{CCM25} and~\cite[footnote~19]{Connes26},
+\[
+1-\chi_2(\lambda)\sim\frac{2^{14}}{3}\sqrt2\,\pi^5\mu^{9/2}e^{-4\pi\mu}\qquad(\mu=\lambda^2\to\infty).
+\]
+In the tables we use this asymptotic formula. At $\mu=11$ it agrees with our direct computation of the prolate eigenvalue to within $13\%$.
+
 \subsection{The bottom of the spectrum}
-We computed $\lambda_{\min}$ in the even sector with a Legendre--Galerkin discretization in ball arithmetic. The dimension $N$ was increased until convergence. We also computed the Rayleigh quotient of the prolate vector $k_\lambda$ of~\cite{CCM25}.
+Restricting to the even sector, we computed the bottom $\lambda_{\min}^{\rm even}$ of $W_\lambda$ with a Legendre--Galerkin discretization of dimension $N$; the matrix entries are computed in ball arithmetic and the eigenvalues at high precision. The ground state is believed to be even; Zhu~\cite[Thm.~6.2]{Zhu26} certifies this for $L=0.8$ ($\mu=4.95$). By the Rayleigh--Ritz principle, the Galerkin values are upper bounds for $\lambda_{\min}^{\rm even}$, and they decrease as $N$ grows. We also computed the Rayleigh quotient of the vector $k_\lambda$ of~\cite{CCM25}, which is $\E(\varphi)$ restricted to the window for a combination $\varphi$ of $h_{0,\lambda}$ and $h_{4,\lambda}$, projected onto the same basis.
 
 \begin{center}\small
 \begin{tabular}{rrrrrr}
 \toprule
-$\mu$ & $N$ & $\lambda_{\min}$ (even) & $W(k_\lambda)/\|k_\lambda\|^2$ & $1-\chi_2$ (Fuchs) & $W(k_\lambda)/\|k_\lambda\|^2(1-\chi_2)$\\
+$\mu$ & $N$ & $\lambda_{\min}^{\rm even}$ (Galerkin) & $W(k_\lambda)/\|k_\lambda\|^2$ & $1-\chi_2$ & $W(k_\lambda)/\|k_\lambda\|^2(1-\chi_2)$\\
 \midrule
 5 & 140 & $9.27\times10^{-18}$ & $1.40\times10^{-17}$ & $1.70\times10^{-18}$ & 8.2\\
 7 & 140 & $6.75\times10^{-28}$ & $9.33\times10^{-28}$ & $9.42\times10^{-29}$ & 9.9\\
 13 & 260 & $2.54\times10^{-59}$ & $3.49\times10^{-59}$ & $2.75\times10^{-60}$ & 12.7\\
 15 & 260 & $6.04\times10^{-70}$ & $8.72\times10^{-70}$ & $6.36\times10^{-71}$ & 13.7\\
 17 & 300 & $1.35\times10^{-80}$ & $1.87\times10^{-80}$ & $1.36\times10^{-81}$ & 13.7\\
-20$^*$ & 380 & $1.35\times10^{-96}$ & $1.80\times10^{-96}$ & $1.20\times10^{-97}$ & 15.0\\
+20 & 380 & $1.35\times10^{-96}$ & $1.80\times10^{-96}$ & $1.20\times10^{-97}$ & 15.0\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Here $1-\chi_2(\lambda)\sim\frac{2^{14}}{3}\sqrt2\,\pi^5\mu^{9/2}e^{-4\pi\mu}$ is the asymptotic prolate eigenvalue defect of~\cite{Fuchs64}. At $\mu=11$ it agrees with our direct computation of the prolate eigenvalue to within $13\%$. The data are consistent with $\lambda_{\min}\asymp\mu^{9/2}e^{-4\pi\mu}$, the exponent of Theorem~\ref{thm:B}.
-
-$^*$At $\mu=20$ the Galerkin value has not fully converged: from $N=340$ to $N=380$ it decreased by $30\%$. Galerkin values are upper bounds for $\lambda_{\min}$.
+Convergence in $N$ was checked only partially. The change from the next smaller $N$ that we computed was $5\%$ at $\mu=13$ ($N=220\to260$), a factor $2.7$ at $\mu=15$ ($220\to260$), a factor $3.8$ at $\mu=17$ ($260\to300$) and $30\%$ at $\mu=20$ ($340\to380$); at $\mu=5$ and $7$ only $N=140$ was computed. The values for $\mu\ge15$ should therefore be read as upper bounds that may not have converged. At $\mu=5$ our value is consistent with Zhu's certified enclosure $8.9\times10^{-18}\le\lambda_1^{\rm even}\le2.523\times10^{-16}$ for the slightly smaller window $\mu=e^{1.6}$~\cite[Thm.~6.2]{Zhu26}. The data are consistent with $\lambda_{\min}\asymp\mu^{9/2}e^{-4\pi\mu}$, as observed in~\cite[Fig.~4]{CCM25} and~\cite[Fig.~1]{Connes26}.
 
 \subsection{Comparison with Zhu's certified bounds}
 Zhu~\cite[Table~3]{Zhu26} gives certified upper bounds $\lambda^*_{\rm Zhu}(L)$ for windows $[-L,L]$, so $\mu=e^{2L}$. Divided by $1-\chi_2$, they stay within a narrow band over $283$ orders of magnitude:
@@ -290,6 +511,7 @@ $L$ & $\mu$ & $\lambda^*_{\rm Zhu}$ (upper bound) & $1-\chi_2$ & ratio\\
 \end{tabular}
 \end{center}
 
+Over the whole range $0.5\le L\le2$ of~\cite[Table~3]{Zhu26} the ratio lies between $3.4$ and $19.2$.
 \begin{itemize}
 \item The ratio grows slowly, like a small power of $\mu$. This is compatible with $-\ln\lambda^*=4\pi\mu-O(\log\mu)$.
 \item Zhu fits the empirical law $-\ln\lambda^*\simeq2\pi^2N(T^*)/\ln N(T^*)$, with a fitted constant. It behaves like $2\pi^2\mu$ as $\mu\to\infty$, but in this range it agrees numerically with $4\pi\mu$.
@@ -326,15 +548,15 @@ What is \emph{not} formalized:
 \section{Remarks}
 \begin{enumerate}
 \item \textbf{What the theorems say.} Any proof of RH by window-by-window positivity must beat a margin that is, unconditionally, at most $e^{-4\pi\mu+O(\log\mu)}$.
-\item \textbf{The polynomial factor.} It depends on the construction: $\mu^{16.8}$ numerically for $\varphi_B$, against about $\mu^{4.5}$ for $k_\lambda$.
-\item \textbf{Relation to the CCM program.} The vector $k_\lambda$ of the program is of the form $\E(\varphi)$ restricted to the window, with $\varphi$ a prolate function. The mechanism of this paper therefore also bounds $W(k_\lambda)$ from above. Numerically $W(k_\lambda)\approx(8$--$14)(1-\chi_2)$.
+\item\label{rem:poly} \textbf{The polynomial factor.} It depends on the construction. The proof of Theorem~\ref{thm:B} gives $\lambda^{46}$ without optimization; numerically the bound of Proposition~\ref{prop:master} for $\varphi_B$ grows like $\mu^{16.8}e^{-4\pi\mu}$, against about $\mu^{4.5}e^{-4\pi\mu}$ for $W(k_\lambda)$.
+\item \textbf{Relation to the CCM vector $k_\lambda$.} The vector $k_\lambda$ is of the form $\E(\varphi)$ restricted to the window, with $\varphi$ built from truncated prolate functions. The truncated prolate functions do not vanish at $\pm\lambda$, so $\varphi$ does not satisfy (H), and we have not verified whether a variant of our argument bounds $W(k_\lambda)$ by a multiple of $1-\chi_2$. We leave this as future work. Numerically $W(k_\lambda)/\|k_\lambda\|^2\approx(8$--$15)(1-\chi_2)$ for $5\le\mu\le20$.
 \end{enumerate}
 
 \section*{Reproducibility}
-The Lean development, the numerical scripts and their outputs, and a summary of the verification are available at \url{https://github.com/moriryota/weil-window-upper-bounds} (release \texttt{v1.0.0}). The Lean development uses Lean~\texttt{v4.33.0-rc2}, Mathlib revision \texttt{51e6992e}, and the Zeta23 formalization at formal-math commit \texttt{3635e748}. This paper is distributed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). The code is distributed under the Apache License 2.0.
+The Lean development, the numerical scripts and their outputs, and a summary of the verification are available at \url{https://github.com/moriryota/weil-window-upper-bounds} and archived on Zenodo, \doi{10.5281/zenodo.23059099} (all versions; this paper corresponds to release \texttt{v1.0.1}). The Lean development uses Lean~\texttt{v4.33.0-rc2}, Mathlib revision \texttt{51e6992e}, and the Zeta23 formalization at formal-math commit \texttt{3635e748}. This paper is distributed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). The code is distributed under the Apache License 2.0.
 
 \section*{Use of generative AI}
-This work was carried out with extensive use of generative AI systems, namely Anthropic Claude and Google Gemini. Under the direction of the author, these systems did the following:
+This work was carried out with extensive use of generative AI systems, namely Anthropic Claude, Google Gemini and OpenAI GPT. Under the direction of the author, these systems did the following:
 \begin{itemize}
 \item drafted the proofs and the Lean development;
 \item implemented and ran the numerical computations;
@@ -353,12 +575,15 @@ We thank the developers of Lean, Mathlib and Arb, and of the Zeta23 formalizatio
 \bibitem{CC21} A.~Connes, C.~Consani, Spectral triples and $\zeta$-cycles, arXiv:2106.01715.
 \bibitem{CCM25} A.~Connes, C.~Consani, H.~Moscovici, Zeta spectral triples, arXiv:2511.22755.
 \bibitem{Connes99} A.~Connes, Trace formula in noncommutative geometry and the zeros of the Riemann zeta function, Selecta Math.\ (N.S.) 5 (1999), 29--106.
+\bibitem{Connes26} A.~Connes, The Riemann Hypothesis: past, present and a letter through time, arXiv:2602.04022.
+\bibitem{Davenport} H.~Davenport, Multiplicative Number Theory, 3rd ed., Graduate Texts in Mathematics 74, Springer, 2000.
 \bibitem{DLMF} NIST Digital Library of Mathematical Functions, \S10.14, \url{https://dlmf.nist.gov/10.14}.
 \bibitem{Fuchs64} W.~H.~J.~Fuchs, On the eigenvalues of an integral equation arising in the theory of band-limited signals, J.\ Math.\ Anal.\ Appl.\ 9 (1964), 317--330.
 \bibitem{IK04} H.~Iwaniec, E.~Kowalski, Analytic Number Theory, AMS Colloquium Publications 53, 2004.
 \bibitem{Lean4} L.~de Moura, S.~Ullrich, The Lean 4 theorem prover and programming language, in: CADE-28, LNCS 12699 (2021), 625--635.
 \bibitem{Mori26} R.~Mori, Weil positivity on a window of width $\log5$: a formal proof in Lean~4, 2026, \doi{10.5281/zenodo.23034001}.
 \bibitem{Mathlib} The mathlib Community, The Lean mathematical library, in: CPP 2020, 367--381.
+\bibitem{SP61} D.~Slepian, H.~O.~Pollak, Prolate spheroidal wave functions, Fourier analysis and uncertainty, I, Bell System Tech.\ J.\ 40 (1961), 43--63.
 \bibitem{Watson} G.~N.~Watson, A Treatise on the Theory of Bessel Functions, 2nd ed., Cambridge University Press, 1944, Chapter~XII.
 \bibitem{Weil52} A.~Weil, Sur les ``formules explicites'' de la th\'eorie des nombres premiers, Comm.\ S\'em.\ Math.\ Univ.\ Lund (1952), tome suppl\'ementaire, 252--265.
 \bibitem{Zeta23} Anthropic, Zeta23: a Lean~4 formalization accompanying ``More than two thirds of the zeros of the Riemann zeta function lie on the critical line'' (2026), \url{https://github.com/anthropics/zeta-23-lean}, Apache License~2.0.
