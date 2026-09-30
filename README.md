@@ -4,7 +4,8 @@ This repository contains the code, the Lean 4 formalization and the paper for:
 
 > R. Mori, *Unconditional doubly exponential upper bounds for the bottom of windowed Weil quadratic forms* (2026).
 
-Archived on Zenodo: [doi:10.5281/zenodo.23059099](https://doi.org/10.5281/zenodo.23059099) (all versions).
+- Paper (Zenodo): [doi:10.5281/zenodo.23059298](https://doi.org/10.5281/zenodo.23059298)
+- Code and Lean formalization (Zenodo, all versions): [doi:10.5281/zenodo.23059099](https://doi.org/10.5281/zenodo.23059099)
 
 ## Results
 
@@ -67,7 +68,7 @@ The formal result is checked by the Lean kernel. Theorem B and the paper have no
 
 ## Versions
 
-- **v1.0.1** (paper version 2): full proofs in the paper; corrected power in Lemma 5.3 (`λ²²` instead of `λ²⁰` for `ξφ̂_B′`, hence `p = 46` instead of 42); band-edge lower bounds; credit to the prior observations of Connes–Consani–Moscovici and Connes; definition of `χ₂`; notes on the convergence of the Galerkin computations. The Lean development is unchanged.
+- **v1.0.1** ([doi:10.5281/zenodo.23061318](https://doi.org/10.5281/zenodo.23061318); paper version 2): full proofs in the paper; corrected power in Lemma 5.3 (`λ²²` instead of `λ²⁰` for `ξφ̂_B′`, hence `p = 46` instead of 42); band-edge lower bounds; credit to the prior observations of Connes–Consani–Moscovici and Connes; definition of `χ₂`; notes on the convergence of the Galerkin computations. The Lean development is unchanged.
 - **v1.0.0**: initial release ([doi:10.5281/zenodo.23059100](https://doi.org/10.5281/zenodo.23059100)).
 
 ## License
