@@ -1,0 +1,4 @@
+p=3: sup B e^(pi mu)/mu^p = 569975.0 at mu=10000.0;  decreasing on the grid: False;  value at mu=1e4: 5.6997e+5
+p=3.5: sup B e^(pi mu)/mu^p = 27199.4 at mu=5.0;  decreasing on the grid: False;  value at mu=1e4: 5699.7
+p=4: sup B e^(pi mu)/mu^p = 12163.9 at mu=5.0;  decreasing on the grid: True;  value at mu=1e4: 56.997
+=> lambda_min <= 2 S C^2 mu^8 e^(-2 pi mu) / c0^2 with C = 12163.9:  constant = 1.52824e+9

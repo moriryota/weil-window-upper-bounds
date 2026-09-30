@@ -1,0 +1,11 @@
+Unconditional doubly exponential upper bounds for the bottom of windowed Weil quadratic forms
+Copyright 2026 Ryota Mori
+
+The code in this repository (lean/, python/) is licensed under the Apache License, Version 2.0
+(see LICENSE). The paper in paper/ is licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0).
+
+The Lean development depends on, but does not include, the Zeta23 formalization in Anthropic's
+formal-math repository (https://github.com/anthropics/formal-math, commit
+3635e74826a4c1fcece7d1cd2b6fa75e43a00510), licensed under the Apache License, Version 2.0, and on
+Lean 4 and Mathlib, fetched by the build tool at the revisions pinned in lean/lake-manifest.json.

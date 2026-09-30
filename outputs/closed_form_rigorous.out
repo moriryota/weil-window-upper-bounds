@@ -1,0 +1,4 @@
+F(sqrt 5) = [12163.94899 +/- 4.04e-7]   F(10) = [211.8409073 +/- 4.25e-8]   F(100) = [56.99745323 +/- 2.91e-10]
+Part 1: 48882 intervals; sup F over mu in [5, 1e4] <= [12297.9817810 +/- 5.86e-9] (at lam in ('[2.23607 +/- 2.03e-6]', '[2.23807 +/- 2.03e-6]'))
+Part 2: for lam >= 100, F(lam) <= Pi(100)/100^8 + tiny = [56.9979185586 +/- 3.22e-11] + [1.02e-40889 +/- 4.28e-40892]
+Degree check: xg3 contains lam * P_0(lam) * lam^4 with deg P_0 = 4 -> lam^9, divided by lam in D1 zeta2/(4 pi^2 lam): lam^8

@@ -1,0 +1,22 @@
+|Q_i| coefficient lists: [[0.0, 0.0, 4.71238898038469, 0.0, 9.869604401089358], [0.0, 9.42477796076938, 0.0, 69.08723080762552, 0.0, 62.01255336059964], [9.42477796076938, 0.0, 266.4793188294127, 0.0, 744.1506403271957, 0.0, 389.6363641360098], [0.0, 592.1762640653615, 0.0, 4650.941502044973, 0.0, 7013.454554448175, 0.0, 2448.1574782822518]]
+||psi''||_1 = 27.19410536   ||(x psi)'''||_1 = 158.2323954
+
+(1) explicit bound B >= A0 + A1 and 2 S B^2 >= |W(k)|; scaled by e^{pi lam^2}
+mu=  5: delta=1/lam: B=22.055  B e^(pi mu)=1.4635e+8  2SB^2=44.935 | delta=1/lam^2: B=1.1457  B e^(pi mu)=7.6025e+6  2SB^2=0.12127
+mu=  7: delta=1/lam: B=0.41356  B e^(pi mu)=1.4695e+9  2SB^2=0.015801 | delta=1/lam^2: B=0.0049497  B e^(pi mu)=1.7588e+7  2SB^2=2.2633e-6
+mu=  9: delta=1/lam: B=0.0033651  B e^(pi mu)=6.4031e+9  2SB^2=1.0462e-6 | delta=1/lam^2: B=1.6253e-5  B e^(pi mu)=3.0927e+7  2SB^2=2.4405e-11
+mu= 11: delta=1/lam: B=1.8047e-5  B e^(pi mu)=1.8389e+10  2SB^2=3.0089e-11 | delta=1/lam^2: B=4.7375e-8  B e^(pi mu)=4.8272e+7  2SB^2=2.0735e-16
+mu= 13: delta=1/lam: B=7.5967e-8  B e^(pi mu)=4.1449e+10  2SB^2=5.3314e-16 | delta=1/lam^2: B=1.2897e-10  B e^(pi mu)=7.0367e+7  2SB^2=1.5366e-21
+mu= 16: delta=1/lam: B=1.5732e-11  B e^(pi mu)=1.0637e+11  2SB^2=2.2865e-23 | delta=1/lam^2: B=1.6874e-14  B e^(pi mu)=1.1409e+8  2SB^2=2.6305e-29
+mu= 20: delta=1/lam: B=1.4113e-16  B e^(pi mu)=2.7363e+11  2SB^2=1.8402e-33 | delta=1/lam^2: B=1.0125e-19  B e^(pi mu)=1.963e+8  2SB^2=9.4706e-40
+mu= 25: delta=1/lam: B=5.1729e-23  B e^(pi mu)=6.655e+11  2SB^2=2.4721e-46 | delta=1/lam^2: B=2.6969e-26  B e^(pi mu)=3.4695e+8  2SB^2=6.7191e-53
+mu= 36: delta=1/lam: B=1.9796e-37  B e^(pi mu)=2.5949e+12  2SB^2=3.6204e-75 | delta=1/lam^2: B=7.1222e-41  B e^(pi mu)=9.3361e+8  2SB^2=4.6862e-82
+mu= 49: delta=1/lam: B=1.0739e-54  B e^(pi mu)=7.6809e+12  2SB^2=1.0654e-109 | delta=1/lam^2: B=3.1842e-58  B e^(pi mu)=2.2774e+9  2SB^2=9.3666e-117
+mu= 64: delta=1/lam: B=9.0852e-75  B e^(pi mu)=1.8986e+13  2SB^2=7.6254e-150 | delta=1/lam^2: B=2.4488e-78  B e^(pi mu)=5.1172e+9  2SB^2=5.5397e-157
+mu=100: delta=1/lam: B=2.9863e-123  B e^(pi mu)=8.1802e+13  2SB^2=8.2384e-247 | delta=1/lam^2: B=7.7335e-127  B e^(pi mu)=2.1184e+10  2SB^2=5.5251e-254
+
+(2) direction check: A0 + A1 from the definitions (same phi, delta = 1/lam^2) <= B
+mu=5: eps=0.00018878 (bound 0.00064237)  phi' check -0.013349161 vs -0.013349161  A0+A1=0.00821221  B=1.14571  B/(A0+A1)=139.51  (integrand at cut 2.32e-6)
+mu=7: eps=4.1526e-7 (bound 1.2282e-6)  phi' check -5.4192023e-5 vs -5.4192023e-5  A0+A1=4.51849e-5  B=0.00494966  B/(A0+A1)=109.54  (integrand at cut 1.27e-8)
+mu=11: eps=1.6897e-12 (bound 4.165e-12)  phi' check -4.5758692e-10 vs -4.5758692e-10  A0+A1=5.53783e-10  B=4.73755e-8  B/(A0+A1)=85.549  (integrand at cut 1.68e-13)
+mu=13: eps=3.3559e-15 (bound 7.7639e-15)  phi' check -1.1735673e-12 vs -1.1735673e-12  A0+A1=1.6214e-12  B=1.28967e-10  B/(A0+A1)=79.54  (integrand at cut 1.53e-16)

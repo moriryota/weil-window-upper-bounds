@@ -1,0 +1,16 @@
+name = "RhWeil"
+version = "1.0.0"
+defaultTargets = ["RhWeil"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+
+# Zeta23 (Weil's explicit formula for ζ, Apache-2.0), pinned to the revision this development was built against.
+[[require]]
+name = "Zeta23"
+git = "https://github.com/anthropics/formal-math"
+rev = "3635e74826a4c1fcece7d1cd2b6fa75e43a00510"
+
+[[lean_lib]]
+name = "RhWeil"

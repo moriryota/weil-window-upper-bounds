@@ -1,0 +1,6 @@
+check at xi=3 lam: closed=-5.4883607780206e-14 direct=-5.4883607780206e-14;  xi phi^'=-2.74414266763659e-12 diff-quot=-2.74414266763659e-12
+xi ~     5 lam:  max xi^3|phi^| = 1.42317e-11   max xi^2|xi phi^'| = 2.04132e-10   max xi^3|xi phi^'| = 2.41117e-9
+xi ~    20 lam:  max xi^3|phi^| = 1.2363e-11   max xi^2|xi phi^'| = 1.75352e-10   max xi^3|xi phi^'| = 8.00066e-9
+xi ~    80 lam:  max xi^3|phi^| = 1.23642e-11   max xi^2|xi phi^'| = 1.72681e-10   max xi^3|xi phi^'| = 3.10455e-8
+xi ~   320 lam:  max xi^3|phi^| = 1.22453e-11   max xi^2|xi phi^'| = 1.73618e-10   max xi^3|xi phi^'| = 1.24344e-7
+xi ~  1280 lam:  max xi^3|phi^| = 1.22964e-11   max xi^2|xi phi^'| = 1.73612e-10   max xi^3|xi phi^'| = 4.96945e-7

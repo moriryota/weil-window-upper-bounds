@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Unconditional doubly exponential upper bounds for the bottom of windowed Weil quadratic forms: code and Lean formalization"
+authors:
+  - family-names: Mori
+    given-names: Ryota
+license: Apache-2.0
+version: "1.0.0"
+repository-code: "https://github.com/moriryota/weil-window-upper-bounds"
+keywords:
+  - Lean 4
+  - formal verification
+  - Weil explicit formula
+  - Riemann zeta function
+  - prolate spheroidal wave functions

@@ -1,0 +1,16 @@
+(1),(2)
+   a=0.5: sup sqrt(w)|J| = 0.797885 (claimed <= 0.797885)   sup|J| = 0.679184   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999933
+   a=2.5: sup sqrt(w)|J| = 0.886279 (claimed <= 0.797885)   sup|J| = 0.457392   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999971
+   a=3.5: sup sqrt(w)|J| = 0.917009 (claimed <= 0.797885)   sup|J| = 0.415533   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999978
+   a=4.5: sup sqrt(w)|J| = 0.942919 (claimed <= 0.797885)   sup|J| = 0.386001   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999982
+   a=5.5: sup sqrt(w)|J| = 0.965418 (claimed <= 0.797885)   sup|J| = 0.363557   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999985
+   a=6.5: sup sqrt(w)|J| = 0.985358 (claimed <= 0.797885)   sup|J| = 0.345648   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999987
+   a=7.5: sup sqrt(w)|J| = 1.00335 (claimed <= 0.797885)   sup|J| = 0.330871   sup |J|/((w/2)^a/Gamma(a+1)) = 0.999988
+(3)
+   mu=5: sup Phi/I*e^(pi x^2) = 1.0   sup I(beta-pi x^2)/I(beta)*e^(pi x^2) = 1.32839   sqrt(beta)=5.605
+   mu=13: sup Phi/I*e^(pi x^2) = 1.0   sup I(beta-pi x^2)/I(beta)*e^(pi x^2) = 1.38153   sqrt(beta)=9.038
+   mu=50: sup Phi/I*e^(pi x^2) = 1.0   sup I(beta-pi x^2)/I(beta)*e^(pi x^2) = 1.40576   sqrt(beta)=17.72
+   mu=200: sup Phi/I*e^(pi x^2) = 1.0   sup I(beta-pi x^2)/I(beta)*e^(pi x^2) = 1.4121   sqrt(beta)=35.45
+   mu=1000: sup Phi/I*e^(pi x^2) = 1.0   sup I(beta-pi x^2)/I(beta)*e^(pi x^2) = 1.41379   sqrt(beta)=79.27
+(4) monotonicity of g(z) = e^{-z} sqrt(z) I_2(z)
+   z in (0,2000], step 0.05: decreasing steps = 0;  g(2000) = 0.3985683538, 1/sqrt(2 pi) = 0.3989422804
