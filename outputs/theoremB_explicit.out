@@ -1,0 +1,36 @@
+Lemma 5.7 (sigma_bar, c_B^2), ball arithmetic:
+  z_D = [23.29867468 +/- 4.63e-9]
+  sqrt(2pi) g(z_D): ball = [0.921059984551 +/- 1.15e-13];  paper: >= 0.9210599  -> OK
+  D (denominator of sigma, lower bound): ball = [0.114970777762 +/- 2.21e-13];  paper: >= 0.1149707  -> OK
+  sigma <= (3/(4 pi^2)) / D_low: ball = [0.660958728891 +/- 3.90e-13];  paper: <= 0.66096  -> OK
+  e^(-2 eta) = [0.81873075 +/- 3.08e-9] > sigma_bar: True
+  z_* = [27.31053275 +/- 4.97e-9]
+  sqrt(2pi) g(z_*): ball = [0.932460691433 +/- 1.92e-13];  paper: >= 0.93246  -> OK
+  c_B^2 (lower bound for ||k_B||^2): ball = [6.54904798049e-6 +/- 2.44e-18];  paper: >= 6.549e-6  -> OK
+Lemma 5.8 (Q), ball arithmetic:
+  g(beta0), beta0 = 10 pi: ball = [0.375467843049 +/- 1.61e-13];  paper: >= 0.375467  -> OK
+  powers of lam in Q: [2, 4, 6, 8, 9, 11, 13, 15, 17, 19, 23]
+    q_ 2 = [0.471285978199697 +/- 2.79e-16]   positive: True
+    q_ 4 = [29.0666275355302 +/- 1.69e-14]   positive: True
+    q_ 6 = [380.129644490541 +/- 1.57e-13]   positive: True
+    q_ 8 = [572.320521783475 +/- 1.15e-13]   positive: True
+    q_ 9 = [8.29533216986066 +/- 3.62e-15]   positive: True
+    q_11 = [4.18347664501163 +/- 2.28e-15]   positive: True
+    q_13 = [167.382033646183 +/- 2.97e-13]   positive: True
+    q_15 = [124.118016458793 +/- 2.28e-13]   positive: True
+    q_17 = [323.869268832047 +/- 2.60e-13]   positive: True
+    q_19 = [439.539407762650 +/- 1.34e-13]   positive: True
+    q_23 = [290.291072546886 +/- 3.16e-13]   positive: True
+  Q(sqrt5)/5^11.5 (= max of Q/lam^23 over lam >= sqrt5): ball = [310.719846037 +/- 3.83e-10];  paper: <= 310.72  -> OK
+    mu= 7: Q/lam^23 = [300.2674767 +/- 2.33e-8]
+    mu=11: Q/lam^23 = [294.1764863 +/- 3.00e-8]
+    mu=17: Q/lam^23 = [291.8794955 +/- 2.99e-8]
+    mu=30: Q/lam^23 = [290.7916050 +/- 4.41e-8]
+Theorem B:
+  K_B = 2 S (310.72)^2 / 6.549e-6: ball = [1361946939.91 +/- 7.63e-4];  paper: <= 1.362e9  -> OK
+  Theorem B / Theorem A at mu = 5: ball = [0.000603955104495 +/- 3.69e-17];  paper: <= 0.001  -> OK
+direction checks against the true functions (numerical; omega in [beta, 50 beta], 801 points):
+  mu= 5: sigma = 0.419662 (<= 0.66096);  max |phihat|/envelope = 0.8495;  max |xi phihat'|/envelope = 0.7336;  int e_B^2 = 5.90403e-5 (>= 6.549e-6)
+  mu=11: sigma = 0.45044 (<= 0.66096);  max |phihat|/envelope = 0.9357;  max |xi phihat'|/envelope = 0.9077;  int e_B^2 = 7.89456e-5 (>= 6.549e-6)
+  mu=25: sigma = 0.465423 (<= 0.66096);  max |phihat|/envelope = 0.9464;  max |xi phihat'|/envelope = 0.9409;  int e_B^2 = 8.86421e-5 (>= 6.549e-6)
+  mu=60: sigma = 0.472419 (<= 0.66096);  max |phihat|/envelope = 0.9448;  max |xi phihat'|/envelope = 0.9439;  int e_B^2 = 9.3133e-5 (>= 6.549e-6)

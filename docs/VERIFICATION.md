@@ -14,6 +14,7 @@ This document records how each step of the proofs was checked. The numbering fol
 | **N** | Numerical check of an inequality, comparing both sides for the same function. |
 | **R** | Independent adversarial review by an AI system, with its findings checked by reproduction. |
 | **S** | Symbolic computation (sympy). |
+| **B** | Ball arithmetic (Arb), including rigorous integration. |
 | **L** | Lean 4 formalization, checked by the Lean kernel; `#print axioms` shows only the standard axioms. |
 
 ## Theorem A
@@ -38,15 +39,18 @@ This document records how each step of the proofs was checked. The numbering fol
 | Decay exponents 5/2 and 3/2 (Lemma 5.3) | P, N, R | The true decay rates ξ⁻³ and ξ⁻² were checked up to ξ = 1280λ (`check_decay.out`). |
 | Powers `λ¹⁸` (for `φ̂_B`) and `λ²²` (for `ξφ̂_B′`) beyond the band edge (Lemma 5.3) | P, S, N, R | The derivative structure and the powers were checked symbolically (`check_B3_structure.out`). The quotients by `λ¹⁸` and `λ²²` stay in 5.67–5.80 and 13.8–15.2 for μ = 5–40 (`check_B3_powers.out`); two independent AI reviews reproduced them up to μ = 60. |
 | Band-edge lower bounds `\|ξφ̂_B′(λ)\| ≥ 9.6 λ²² e^{−2πμ}`, `\|φ̂_B(λ)\| ≥ 4.4 λ¹⁸ e^{−2πμ}` (Remark 5.4) | P, S, N, R | They show that the powers in Lemma 5.3 are optimal. They say nothing about the optimality of `p = 46` or about lower bounds for `λ_min`. |
-| Final sum, `B_{φ_B} ≤ C′λ²³e^{−2πμ}` and `p = 46` | P, R | |
-| Domination constant 36.14 (Lemma 5.5) | P, N, R | The true supremum is 1.41. |
+| `g(z) = √z e^{−z} I₂(z)` is nondecreasing, with limit `1/√(2π)` (Lemma 5.5) | P, N, R | The integral representation was checked to relative error ≤ 10⁻¹⁶. Two AI reviews checked monotonicity on fine grids of z ≤ 500. |
+| Two-sided bounds for `Φ_β(x/λ)/I₂(β)`: upper bound `e^{−πx²}`, explicit lower bound (Lemma 5.6) | P, N, R | Checked on grids for μ = 5–60. The upper bound replaces the domination constant 36.14 of v1.0.x by 1. |
+| `σ ≤ 0.66096` and `‖k_B‖² ≥ 6.549·10⁻⁶` for μ ≥ 5 (Lemma 5.7) | P, B, N, R | Rigorous integration in Arb (`theoremB_explicit.out`). The true values are σ = 0.42–0.47 and ∫e_B² = 5.9·10⁻⁵–9.3·10⁻⁵ for μ = 5–60. |
+| `B_{φ_B} ≤ Q(λ)e^{−2πμ}`, `Q(λ)/λ²³ ≤ 310.72` for μ ≥ 5 (Lemma 5.8) | P, B, N, R | The eleven coefficients of `Q` are enclosed in Arb and are positive. The pointwise envelopes used in the proof exceed the true `\|φ̂_B\|`, `\|ξφ̂_B′\|` on ω ∈ [β, 50β] for μ = 5–60. The true `B_{φ_B}` is smaller than `Q e^{−2πμ}` by a factor of about 660 (μ = 5). |
+| Final constant `1.362·10⁹` for all μ ≥ 5 | P, B, R | `2 · 0.046192 · 310.72² / 6.549·10⁻⁶ ≤ 1.362·10⁹`. |
 | Proposition 3.5 for `φ_B` | N | The bound exceeds `W(k)` by a factor 46–207 for μ = 5, 7 and 11. |
-| Lower bound on `‖k‖` (Lemma 5.6) | P | This step is qualitative, so `λ₀` is not effective. |
 
 ## Errors found and corrected during the work
 
 These errors were found and corrected during the work. They are recorded for transparency.
 
+- In v1.0.x, Theorem B had a non-effective threshold `λ₀`. Release v1.1.0 makes it explicit for all μ ≥ 5. During the review of this change, one printed lower bound had been rounded in the wrong direction (0.92106 instead of 0.9210599), and one chained step did not follow from the rounded numbers. Both were corrected, and the script now asserts the direction of every printed constant.
 - A draft of the revised paper stated the power `λ²⁰` for `ξφ̂_B′` in Lemma 5.3 (and `p = 42`); release v1.0.0 gave no explicit powers. The correct power is `λ²²`, and `p = 46`. The error was a miscount of the largest power of ω; it was found by a numerical check. The same check first contained a bug of its own: a central difference at the non-smooth point ξ = λ halved the derivative. The scripts in this release evaluate the derivative exactly.
 - An earlier draft of Theorem B claimed `\|ξφ̂'\| ≤ C(1+\|ξ\|)^{−3}`. The true decay is ξ⁻², and the hypothesis was weakened accordingly.
 - A proposed uniform Bessel bound was false.
