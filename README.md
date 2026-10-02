@@ -6,6 +6,7 @@ This repository contains the code, the Lean 4 formalization and the paper for:
 
 - Paper (Zenodo): [doi:10.5281/zenodo.23059298](https://doi.org/10.5281/zenodo.23059298)
 - Code and Lean formalization (Zenodo, all versions): [doi:10.5281/zenodo.23059099](https://doi.org/10.5281/zenodo.23059099)
+- Sequel: [prolate-weil-bounds](https://github.com/moriryota/prolate-weil-bounds) treats the Weil form of the Connes–Consani–Moscovici prolate vector and proves `λ_min(λ) ≤ 5.011·10¹⁷ · μ⁸ (log μ)³ · e^{−4πμ}` for `μ ≥ 50` (paper: [doi:10.5281/zenodo.23092542](https://doi.org/10.5281/zenodo.23092542)).
 
 ## Results
 
