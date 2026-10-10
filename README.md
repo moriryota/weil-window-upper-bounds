@@ -4,9 +4,9 @@ This repository contains the code, the Lean 4 formalization and the paper for:
 
 > R. Mori, *Unconditional doubly exponential upper bounds for the bottom of windowed Weil quadratic forms* (2026).
 
-- Paper (Zenodo): [doi:10.5281/zenodo.23059298](https://doi.org/10.5281/zenodo.23059298)
+- Paper (Zenodo): version 4 [doi:10.5281/zenodo.23282883](https://doi.org/10.5281/zenodo.23282883); all versions [doi:10.5281/zenodo.23059298](https://doi.org/10.5281/zenodo.23059298)
 - Code and Lean formalization (Zenodo, all versions): [doi:10.5281/zenodo.23059099](https://doi.org/10.5281/zenodo.23059099)
-- Sequel: [prolate-weil-bounds](https://github.com/moriryota/prolate-weil-bounds) treats the Weil form of the Connes–Consani–Moscovici prolate vector and proves `λ_min(λ) ≤ 5.011·10¹⁷ · μ⁸ (log μ)³ · e^{−4πμ}` for `μ ≥ 50` (paper: [doi:10.5281/zenodo.23092542](https://doi.org/10.5281/zenodo.23092542)).
+- Sequel: [prolate-weil-bounds](https://github.com/moriryota/prolate-weil-bounds) treats the Weil form of the Connes–Consani–Moscovici prolate vector and proves `λ_min(λ) ≤ 5.046·10¹⁷ · μ⁸ (log μ)³ · e^{−4πμ}` for `μ ≥ 50` (paper, version 3: [doi:10.5281/zenodo.23282913](https://doi.org/10.5281/zenodo.23282913)); a later paper there improves the power to `μ^{9/2} log μ` for `50 ≤ μ ≤ 10⁴`.
 
 ## Results
 
@@ -70,6 +70,7 @@ The formal result is checked by the Lean kernel. Theorem B and the paper have no
 
 ## Versions
 
+- **v1.1.1** (paper version 4): corrected title and location of the Zeta23 reference; arXiv version numbers. The code, the Lean development and the theorems are unchanged.
 - **v1.1.0** (paper version 3): Theorem B with explicit constants for all `μ ≥ 5` (new Lemmas 5.5–5.8; domination constant 1 instead of 36.14; lower bound for `‖k_B‖` without limits). Citation of Connes–Consani–Moscovici (3.27) for the monotonicity of `λ_min`. The Lean development is unchanged.
 - **v1.0.1** ([doi:10.5281/zenodo.23061318](https://doi.org/10.5281/zenodo.23061318); paper version 2): full proofs in the paper; corrected power in Lemma 5.3 (`λ²²` instead of `λ²⁰` for `ξφ̂_B′`, hence `p = 46` instead of 42); band-edge lower bounds; credit to the prior observations of Connes–Consani–Moscovici and Connes; definition of `χ₂`; notes on the convergence of the Galerkin computations. The Lean development is unchanged.
 - **v1.0.0**: initial release ([doi:10.5281/zenodo.23059100](https://doi.org/10.5281/zenodo.23059100)).
